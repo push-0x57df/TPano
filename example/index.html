@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TPano 全景照片查看器</title>
+    <style>
+        * {
+            margin: 0;
+        }
+
+        #pano {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body id="pano"></body>
+<!--引入three.js-->
+<script src="./three.js"></script>
+<script src="../dist/tpano.js"></script>
+<script>
+var tpano = new TPano({
+    el:'pano',//照片查看器根节点dom的id
+    photo:[
+        //全景照片数组，每项为一张照片
+        {
+            url:'1.jpg',
+            name:'室内'
+        },
+        {
+            url:'2.jfif',
+            name:'建筑'
+        }
+    ],
+    hotspot:[
+        //全景照片上的热点
+        {
+            source:'室内',//此热点放置在哪张全景照片上
+            position:{//热点所在的位置
+                x:-495.0170165931702,
+                y:-42.218783642706285,
+                z:54.33392236397725
+            },
+            jumpTo:'建筑'//热点点击后跳往何方
+        }
+    ]
+})
+</script>
+</html>
