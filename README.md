@@ -69,4 +69,6 @@ var tpano = new TPano({
 
 ## Demo
 
-敬请期待~
+https://administrator-user.gitee.io/tpano/example/
+
+（暂未做加载进度展示，故打开白屏，此时正在下载照片数据，请耐心等待片刻）
