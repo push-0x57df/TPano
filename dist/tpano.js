@@ -133,8 +133,17 @@ function TPano(d) {
     }
     function onPointerMove(event) {
         if (event.isPrimary === false) return;
-        lon = (onPointerDownMouseX - event.clientX) * 0.1 + onPointerDownLon;
-        lat = (event.clientY - onPointerDownMouseY) * 0.1 + onPointerDownLat;
+        let rate;//触控灵敏度
+        //想写个函数来线性计算这里的灵敏度，暂时没找到合适的函数
+        if(el.clientWidth<500 && el.clientWidth<el.clientHeight){
+            //判断为手机
+            rate = 0.4;
+        }else{
+            //判断为电脑
+            rate = 0.1;
+        }
+        lon = (onPointerDownMouseX - event.clientX) * rate + onPointerDownLon;
+        lat = (event.clientY - onPointerDownMouseY) * rate + onPointerDownLat;
     }
     function onPointerUp() {
         if (event.isPrimary === false) return;
