@@ -53,6 +53,9 @@ function TPano(d) {
         }
     }
 
+    //体感控制
+    let devicecontrol = new THREE.DeviceOrientationControls( camera );
+
     console.log(scene);
     var material = new THREE.MeshBasicMaterial({ map: texture[0] });
     const mesh = new THREE.Mesh(geometry, material);
@@ -167,6 +170,7 @@ function TPano(d) {
         const y = 500 * Math.cos(phi);
         const z = 500 * Math.sin(phi) * Math.sin(theta);
         camera.lookAt(x, y, z);
+        //devicecontrol.update();
         renderer.render(scene, camera);
     }
 }

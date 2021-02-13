@@ -21,6 +21,7 @@
 <!--引入three.js-->
 <script src="./three.js"></script>
 <script src="../dist/tpano.js"></script>
+<script src="./DeviceOrientationControls.js"></script>
 <script>
 var tpano = new TPano({
     el:'pano',//照片查看器根节点dom的id
@@ -33,6 +34,9 @@ var tpano = new TPano({
         {
             url:'2.jfif',
             name:'建筑'
+        },{
+            url:'3.jpg',
+            name:'外景'
         }
     ],
     hotspot:[
@@ -45,6 +49,15 @@ var tpano = new TPano({
                 z:54.33392236397725
             },
             jumpTo:'建筑'//热点点击后跳往何方
+        },
+        {
+            source:'建筑',
+            position:{
+                x:-495.0170165931702,
+                y:-42.218783642706285,
+                z:54.33392236397725
+            },
+            jumpTo:'外景'
         }
     ]
 })
