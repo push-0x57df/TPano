@@ -170,7 +170,9 @@ function TPano(d) {
         const y = 500 * Math.cos(phi);
         const z = 500 * Math.sin(phi) * Math.sin(theta);
         camera.lookAt(x, y, z);
-        //devicecontrol.update();
+        if(d.DeviceOrientationControls == true){
+            devicecontrol.update();
+        }        
         renderer.render(scene, camera);
     }
 }

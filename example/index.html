@@ -21,6 +21,7 @@
 <!--引入three.js-->
 <script src="./three.js"></script>
 <script src="../dist/tpano.js"></script>
+<!--设备朝向控制器，不引入无法使用体感控制-->
 <script src="./DeviceOrientationControls.js"></script>
 <script>
 var tpano = new TPano({
@@ -59,7 +60,8 @@ var tpano = new TPano({
             },
             jumpTo:'外景'
         }
-    ]
+    ],
+    DeviceOrientationControls:false//设备朝向体感控制，默认关闭
 })
 </script>
 </html>
