@@ -7,6 +7,7 @@ function TPano(d) {
     //初始化场景、相机、渲染器
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(90, width / height, 0.1, 1000);//创建相机
+    camera.lookAt(500, 0, 0);//视角矫正
     const renderer = new THREE.WebGLRenderer({
         antialias: true,
         alpha: true
@@ -54,125 +55,140 @@ function TPano(d) {
     }
 
     //体感控制
-    let devicecontrol = new THREE.DeviceOrientationControls( camera );
+    let devicecontrol = new THREE.DeviceOrientationControls(camera);
 
     console.log(scene);
+    //初始化贴图
     var material = new THREE.MeshBasicMaterial({ map: texture[0] });
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
 
-    //初始化鼠标控制用变量
-    let isUserInteracting = false,
-        onPointerDownMouseX = 0, onPointerDownMouseY = 0,
-        lon = 0, onPointerDownLon = 0,
-        lat = 0, onPointerDownLat = 0,
-        phi = 0, theta = 0;
+    //启动鼠标控制
+    mouseController();
 
     //动画绑定
     function animate() {
         requestAnimationFrame(animate);
-        update();
+        render();
     }
     animate();
 
-    //鼠标控制视角、响应热点交互
-    const raycaster = new THREE.Raycaster();
-    const mouse = new THREE.Vector2();
-    function onMouseMove(event) {
-        // 将鼠标位置归一化为设备坐标。x 和 y 方向的取值范围是 (-1 to +1)
-        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-        render();
-    }
+    //封装鼠标控制
+    function mouseController() {
+        //初始化鼠标控制用变量
+        let isUserInteracting = false,
+            onPointerDownMouseX = 0, onPointerDownMouseY = 0,
+            lon = 0, onPointerDownLon = 0,
+            lat = 0, onPointerDownLat = 0,
+            phi = 0, theta = 0;
 
-    //鼠标按下到松开期间有没有移动，如果没有移动说明点击的是热点，否则是移动视角
-    let clientX, clientY;
-    el.addEventListener('pointerdown', function (event) {
-        clientX = event.clientX;
-        clientY = event.clientY;
-    });
-    el.addEventListener('pointerup', function (event) {
-        if (clientX == event.clientX && clientY == event.clientY) {
-            positionClick();
+        //鼠标控制视角、响应热点交互
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+        function onMouseMove(event) {
+            // 将鼠标位置归一化为设备坐标。x 和 y 方向的取值范围是 (-1 to +1)
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+            render();
         }
-    });
 
-    function positionClick() {
-        // 通过摄像机和鼠标位置更新射线
-        raycaster.setFromCamera(mouse, camera);
-        // 计算物体和射线的焦点
-        const intersects = raycaster.intersectObjects(scene.children);
-        for (let i = 0; i < intersects.length; i++) {
-            //检测点击热点是否跳转场地
-            if (intersects[i].object.jumpTo != null) {
-                material = new THREE.MeshBasicMaterial({ map: texture[intersects[i].object.jumpTo] });
-                mesh.material = material;
-                cleanHotspot();
-                console.log(scene);
+        //鼠标按下到松开期间有没有移动，如果没有移动说明点击的是热点，否则是移动视角
+        let clientX, clientY;
+        el.addEventListener('pointerdown', function (event) {
+            clientX = event.clientX;
+            clientY = event.clientY;
+        });
+        el.addEventListener('pointerup', function (event) {
+            if (clientX == event.clientX && clientY == event.clientY) {
+                positionClick();
+            }
+        });
+
+        //获取点击坐标，拾取点击对象
+        function positionClick() {
+            // 通过摄像机和鼠标位置更新射线
+            raycaster.setFromCamera(mouse, camera);
+            // 计算物体和射线的焦点
+            const intersects = raycaster.intersectObjects(scene.children);
+            for (let i = 0; i < intersects.length; i++) {
+                //检测点击热点是否跳转场地
+                if (intersects[i].object.jumpTo != null) {
+                    material = new THREE.MeshBasicMaterial({ map: texture[intersects[i].object.jumpTo] });
+                    mesh.material = material;
+                    cleanHotspot();
+                    console.log(scene);
+                }
+            }
+        }
+
+        el.style.touchAction = 'none';
+        el.addEventListener('pointerdown', onPointerDown);
+        document.addEventListener('wheel', onDocumentMouseWheel);
+        function onPointerDown(event) {
+            onMouseMove(event);
+            if (event.isPrimary === false) return;
+            isUserInteracting = true;
+    
+            onPointerDownMouseX = event.clientX;
+            onPointerDownMouseY = event.clientY;
+    
+            onPointerDownLon = lon;
+            onPointerDownLat = lat;
+    
+            document.addEventListener('pointermove', onPointerMove);
+            document.addEventListener('pointerup', onPointerUp);
+        }
+
+        function onPointerMove(event) {
+            if (event.isPrimary === false) return;
+            let rate;//触控灵敏度
+            //想写个函数来线性计算这里的灵敏度，暂时没找到合适的函数
+            if (el.clientWidth < 500 && el.clientWidth < el.clientHeight) {
+                //判断为手机
+                rate = 0.4;
+            } else {
+                //判断为电脑
+                rate = 0.1;
+            }
+            lon = (onPointerDownMouseX - event.clientX) * rate + onPointerDownLon;
+            lat = (event.clientY - onPointerDownMouseY) * rate + onPointerDownLat;
+            update();
+        }
+
+        function onPointerUp() {
+            if (event.isPrimary === false) return;
+            isUserInteracting = false;
+            document.removeEventListener('pointermove', onPointerMove);
+            document.removeEventListener('pointerup', onPointerUp);
+        }
+
+        function onDocumentMouseWheel(event) {
+            const fov = camera.fov + event.deltaY * 0.05;
+            camera.fov = THREE.MathUtils.clamp(fov, 10, 75);
+            camera.updateProjectionMatrix();
+        }
+
+        function update() {
+            if (isUserInteracting === false) {
+                //lon += 0.1;
+            }
+            lat = Math.max(- 85, Math.min(85, lat));
+            phi = THREE.MathUtils.degToRad(90 - lat);
+            theta = THREE.MathUtils.degToRad(lon);
+            const x = 500 * Math.sin(phi) * Math.cos(theta);
+            const y = 500 * Math.cos(phi);
+            const z = 500 * Math.sin(phi) * Math.sin(theta);
+            console.log('x='+x+'y='+y+'z='+z);
+            camera.lookAt(x, y, z);
+            if (d.DeviceOrientationControls == true) {
+                devicecontrol.update();
             }
         }
     }
 
+    //渲染
     function render() {
         renderer.render(scene, camera);
     }
-    //document.addEventListener('mousemove', onMouseMove, false);
-    el.style.touchAction = 'none';
-    el.addEventListener('pointerdown', onPointerDown);
-    document.addEventListener('wheel', onDocumentMouseWheel);
-    function onPointerDown(event) {
-        onMouseMove(event);
-        if (event.isPrimary === false) return;
-        isUserInteracting = true;
 
-        onPointerDownMouseX = event.clientX;
-        onPointerDownMouseY = event.clientY;
-
-        onPointerDownLon = lon;
-        onPointerDownLat = lat;
-
-        document.addEventListener('pointermove', onPointerMove);
-        document.addEventListener('pointerup', onPointerUp);
-    }
-    function onPointerMove(event) {
-        if (event.isPrimary === false) return;
-        let rate;//触控灵敏度
-        //想写个函数来线性计算这里的灵敏度，暂时没找到合适的函数
-        if(el.clientWidth<500 && el.clientWidth<el.clientHeight){
-            //判断为手机
-            rate = 0.4;
-        }else{
-            //判断为电脑
-            rate = 0.1;
-        }
-        lon = (onPointerDownMouseX - event.clientX) * rate + onPointerDownLon;
-        lat = (event.clientY - onPointerDownMouseY) * rate + onPointerDownLat;
-    }
-    function onPointerUp() {
-        if (event.isPrimary === false) return;
-        isUserInteracting = false;
-        document.removeEventListener('pointermove', onPointerMove);
-        document.removeEventListener('pointerup', onPointerUp);
-    }
-    function onDocumentMouseWheel(event) {
-        const fov = camera.fov + event.deltaY * 0.05;
-        camera.fov = THREE.MathUtils.clamp(fov, 10, 75);
-        camera.updateProjectionMatrix();
-    }
-    function update() {
-        if (isUserInteracting === false) {
-            //lon += 0.1;
-        }
-        lat = Math.max(- 85, Math.min(85, lat));
-        phi = THREE.MathUtils.degToRad(90 - lat);
-        theta = THREE.MathUtils.degToRad(lon);
-        const x = 500 * Math.sin(phi) * Math.cos(theta);
-        const y = 500 * Math.cos(phi);
-        const z = 500 * Math.sin(phi) * Math.sin(theta);
-        camera.lookAt(x, y, z);
-        if(d.DeviceOrientationControls == true){
-            devicecontrol.update();
-        }        
-        renderer.render(scene, camera);
-    }
 }
