@@ -175,7 +175,7 @@ function TPano(d) {
             if (event.isPrimary === false) return;
             let rate;//触控灵敏度
             //想写个函数来线性计算这里的灵敏度，暂时没找到合适的函数
-            if (el.clientWidth < 500 && el.clientWidth < el.clientHeight) {
+            if (el.clientWidth <= 700 || el.clientWidth < el.clientHeight) {
                 //判断为手机
                 rate = 0.4;
             } else {
