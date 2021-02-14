@@ -154,7 +154,7 @@ function TPano(d) {
         function onPointerDown(event) {
             //计算摄像机目前视角状态，保持当前状态，在当前状态上附加变化
             //console.log(camera);
-            lon = -1*THREE.MathUtils.radToDeg(camera.rotation.y)-90;//经度
+            lon = -1 * THREE.MathUtils.radToDeg(camera.rotation.y) - 90;//经度
             lat = THREE.MathUtils.radToDeg(camera.rotation.x);//纬度
 
             onMouseMove(event);
@@ -225,4 +225,16 @@ function TPano(d) {
         renderer.render(scene, camera);
     }
 
+    //宽高重设
+    this.re = {
+        resizeRendererToDisplaySize: function resizeRendererToDisplaySize(width, height) {
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height, false);
+            el.style.width = width + 'px';
+            el.style.height = height + 'px';
+            renderer.domElement.style.width = width + 'px';
+            renderer.domElement.style.height = height + 'px';
+        }
+    }
 }
