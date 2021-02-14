@@ -73,6 +73,26 @@ function TPano(d) {
     }
     animate();
 
+    //镜头自由旋转
+    let anglexoz = 0;//相机在xoz平面上的角度
+    var rotateAnimateController = d.rotateAnimateController;
+    function rotateAnimate() {
+        if (rotateAnimateController == true) {
+            anglexoz += 0.1;
+            if (anglexoz > 360) {
+                anglexoz = 0;
+            }
+            let x = Math.cos(anglexoz * Math.PI / 180) * 500;
+            let z = Math.sin(anglexoz * Math.PI / 180) * 500;
+            camera.lookAt(x, 0, z);
+            console.log(anglexoz);
+        }
+    }
+    setInterval(rotateAnimate, 1000 / 60);//60帧
+    el.addEventListener('pointerdown', function(){
+        rotateAnimateController = false;
+    });
+
     //封装鼠标控制
     function mouseController() {
         //初始化鼠标控制用变量
@@ -128,13 +148,13 @@ function TPano(d) {
             onMouseMove(event);
             if (event.isPrimary === false) return;
             isUserInteracting = true;
-    
+
             onPointerDownMouseX = event.clientX;
             onPointerDownMouseY = event.clientY;
-    
+
             onPointerDownLon = lon;
             onPointerDownLat = lat;
-    
+
             document.addEventListener('pointermove', onPointerMove);
             document.addEventListener('pointerup', onPointerUp);
         }
@@ -178,7 +198,7 @@ function TPano(d) {
             const x = 500 * Math.sin(phi) * Math.cos(theta);
             const y = 500 * Math.cos(phi);
             const z = 500 * Math.sin(phi) * Math.sin(theta);
-            console.log('x='+x+'y='+y+'z='+z);
+            console.log('x=' + x + 'y=' + y + 'z=' + z);
             camera.lookAt(x, y, z);
             if (d.DeviceOrientationControls == true) {
                 devicecontrol.update();
