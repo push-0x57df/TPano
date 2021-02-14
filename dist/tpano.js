@@ -7,7 +7,7 @@ function TPano(d) {
     //初始化场景、相机、渲染器
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(90, width / height, 0.1, 1000);//创建相机
-    camera.lookAt(500, 0, 0);//视角矫正
+    //camera.lookAt(500, 0, 0);//视角矫正
     const renderer = new THREE.WebGLRenderer({
         antialias: true,
         alpha: true
@@ -16,6 +16,13 @@ function TPano(d) {
     renderer.setClearColor(0x272727, 1.0);
     renderer.setPixelRatio(window.devicePixelRatio);
     el.append(renderer.domElement);
+
+    //调试用：显示三维坐标轴
+    if (d.dbug == true) {
+        const axesHelper = new THREE.AxesHelper(5);
+        scene.add(axesHelper);
+    }
+
 
     //生成全景图片3D对象
     const geometry = new THREE.SphereBufferGeometry(500, 60, 40);
@@ -74,7 +81,7 @@ function TPano(d) {
     animate();
 
     //镜头自由旋转
-    let anglexoz = 0;//相机在xoz平面上的角度
+    let anglexoz = -90;//相机在xoz平面上的角度
     var rotateAnimateController = d.rotateAnimateController;
     function rotateAnimate() {
         if (rotateAnimateController == true) {
@@ -85,11 +92,11 @@ function TPano(d) {
             let x = Math.cos(anglexoz * Math.PI / 180) * 500;
             let z = Math.sin(anglexoz * Math.PI / 180) * 500;
             camera.lookAt(x, 0, z);
-            console.log(anglexoz);
+            //console.log(anglexoz);
         }
     }
     setInterval(rotateAnimate, 1000 / 60);//60帧
-    el.addEventListener('pointerdown', function(){
+    el.addEventListener('pointerdown', function () {
         rotateAnimateController = false;
     });
 
@@ -98,7 +105,7 @@ function TPano(d) {
         //初始化鼠标控制用变量
         let isUserInteracting = false,
             onPointerDownMouseX = 0, onPointerDownMouseY = 0,
-            lon = 0, onPointerDownLon = 0,
+            lon = -90, onPointerDownLon = 0,
             lat = 0, onPointerDownLat = 0,
             phi = 0, theta = 0;
 
@@ -145,6 +152,11 @@ function TPano(d) {
         el.addEventListener('pointerdown', onPointerDown);
         document.addEventListener('wheel', onDocumentMouseWheel);
         function onPointerDown(event) {
+            //计算摄像机目前视角状态，保持当前状态，在当前状态上附加变化
+            //console.log(camera);
+            lon = -1*THREE.MathUtils.radToDeg(camera.rotation.y)-90;//经度
+            lat = THREE.MathUtils.radToDeg(camera.rotation.x);//纬度
+
             onMouseMove(event);
             if (event.isPrimary === false) return;
             isUserInteracting = true;
@@ -192,13 +204,15 @@ function TPano(d) {
             if (isUserInteracting === false) {
                 //lon += 0.1;
             }
+            //console.log('lon->' + lon, 'lat->' + lat);
             lat = Math.max(- 85, Math.min(85, lat));
             phi = THREE.MathUtils.degToRad(90 - lat);
             theta = THREE.MathUtils.degToRad(lon);
             const x = 500 * Math.sin(phi) * Math.cos(theta);
             const y = 500 * Math.cos(phi);
             const z = 500 * Math.sin(phi) * Math.sin(theta);
-            console.log('x=' + x + 'y=' + y + 'z=' + z);
+            //console.log('x=' + x + 'y=' + y + 'z=' + z);
+            //console.log('x=' + THREE.MathUtils.radToDeg(camera.rotation.x), 'y=' + THREE.MathUtils.radToDeg(camera.rotation.y));
             camera.lookAt(x, y, z);
             if (d.DeviceOrientationControls == true) {
                 devicecontrol.update();
