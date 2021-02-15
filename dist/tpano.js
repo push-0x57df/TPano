@@ -84,7 +84,7 @@ function TPano(d) {
     let anglexoz = -90;//相机在xoz平面上的角度
     var rotateAnimateController = d.rotateAnimateController;
     function rotateAnimate() {
-        if (rotateAnimateController == true) {
+        if (rotateAnimateController == true && d.DeviceOrientationControls == false) {
             anglexoz += 0.1;
             if (anglexoz > 360) {
                 anglexoz = 0;
