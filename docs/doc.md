@@ -78,5 +78,104 @@ var tpano = new TPano({
 </html>
 ```
 
-就像这样，添加一张文件名为1.jpg的全景照片进入场景
+就像这样，添加一张文件名为1.jpg的全景照片进入场景，其中的关键就是在创建TPano实例的时候设置photo，需要注意的是这是一个数组，你可以创建多个照片项目
+
+## 添加热点
+
+添加热点需要在创建TPano实例时添加hotspot，这也是一个数组对象，其中每项中的source代表照片源，即你想将热点添加到哪一张全景照片上，position表示热点的位置，jumpTo表示需要跳转到何处
+
+代码看起来像这样：
+
+```javascript
+var tpano = new TPano({
+    el:'pano',//照片查看器根节点dom的id
+    photo:[
+        //全景照片数组，每项为一张照片
+        {
+            url:'1.jpg',
+            name:'室内'
+        },
+        {
+            url:'2.jfif',
+            name:'建筑'
+        },{
+            url:'3.jpg',
+            name:'外景'
+        }
+    ],
+    hotspot:[
+        //全景照片上的热点
+        {
+            source:'室内',//此热点放置在哪张全景照片上
+            position:{//热点所在的位置
+                x:-495.0170165931702,
+                y:-42.218783642706285,
+                z:54.33392236397725
+            },
+            jumpTo:'建筑'//热点点击后跳往何方
+        },
+        {
+            source:'建筑',
+            position:{
+                x:-495.0170165931702,
+                y:-42.218783642706285,
+                z:54.33392236397725
+            },
+            jumpTo:'外景'
+        }
+    ],
+})
+```
+
+## 设备朝向体感控制
+
+使用DeviceOrientationControls设置是否使用体感控制，请设置bool值，就像这样：
+
+``` javascript
+var tpano = new TPano({
+	··· ···
+    DeviceOrientationControls:false,//设备朝向体感控制，默认关闭
+   	··· ···
+})
+```
+
+## 开场视角自转
+
+使用rotateAnimateController设置是否使用体感控制，请设置bool值，就像这样：
+
+``` javascript
+var tpano = new TPano({
+	··· ···
+    rotateAnimateController:true,//镜头自转
+   	··· ···
+})
+```
+
+## 调试模式
+
+使用debug设置是否使用体感控制，请设置bool值，就像这样：
+
+``` javascript
+var tpano = new TPano({
+	··· ···
+    debug:true,//调试模式
+   	··· ···
+})
+```
+
+## 重设TPano画布大小
+
+此功能用于响应式设计时，需要对已经加载的TPano重设大小
+
+``` javascript
+tpano.re.resizeRendererToDisplaySize(width:number,height:number);
+```
+
+请在JavaScript中先初始化TPano，将其命名为tpano，然后调用此方法
+
+注意：如果你初始化TPano时选择了其它的名称，请使用你自定义的名称调用此方法，例如：
+
+``` javascript
+youTapnoName.re.resizeRendererToDisplaySize(200,200);
+```
 
