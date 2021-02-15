@@ -126,7 +126,9 @@ function TPano(d) {
             clientY = event.clientY;
         });
         el.addEventListener('pointerup', function (event) {
-            if (clientX == event.clientX && clientY == event.clientY) {
+            var distance = Math.sqrt(Math.pow(Math.abs(event.clientX - clientX), 2) + Math.pow(Math.abs(event.clientY - clientY), 2));//鼠标按下到松开期间移动距离
+            if (distance <= 10) {
+                //这是个容差设计，在手机端如果不给差值，很可能用户的点击和松开之间会有误差
                 positionClick();
             }
         });
