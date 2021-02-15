@@ -137,7 +137,7 @@ function TPano(d) {
         function positionClick() {
             // 通过摄像机和鼠标位置更新射线
             raycaster.setFromCamera(mouse, camera);
-            // 计算物体和射线的焦点
+            // 计算物体和射线的交点
             const intersects = raycaster.intersectObjects(scene.children);
             for (let i = 0; i < intersects.length; i++) {
                 //检测点击热点是否跳转场地
