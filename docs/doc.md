@@ -129,7 +129,7 @@ var tpano = new TPano({
 
 ## 设备朝向体感控制
 
-使用DeviceOrientationControls设置是否使用体感控制，请设置bool值，就像这样：
+使用DeviceOrientationControls设置是否加载完毕后自动使用体感控制，请设置bool值，就像这样：
 
 ``` javascript
 var tpano = new TPano({
@@ -138,6 +138,10 @@ var tpano = new TPano({
    	··· ···
 })
 ```
+
+**注意：使用此功能可能需要您的网站启用https，这是浏览器厂商出于安全考虑的限制策略**
+
+注意：打开此功能会使您设置的开场视角自转功能冲突
 
 ## 开场视角自转
 
