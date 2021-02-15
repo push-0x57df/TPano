@@ -141,7 +141,7 @@ function TPano(d) {
             const intersects = raycaster.intersectObjects(scene.children);
             for (let i = 0; i < intersects.length; i++) {
                 //检测点击热点是否跳转场地
-                if (intersects[i].object.jumpTo != null) {
+                if (intersects[i].object.jumpTo != null && i==0) {
                     material = new THREE.MeshBasicMaterial({ map: texture[intersects[i].object.jumpTo] });
                     mesh.material = material;
                     cleanHotspot();
