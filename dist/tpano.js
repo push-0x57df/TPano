@@ -27,9 +27,13 @@ function TPano(d) {
     var mesh2;
     for (let i = 0; i < d.photo.length; i++) {
         texture[i] = new THREE.TextureLoader().load(d.photo[i].url);
-        //寻找有没有需要生成的热点
+        texture[i].panoName = d.photo[i].name;
+    }
+
+    //生成热点
+    function initHotspot() {
         for (let j = 0; j < d.hotspot.length; j++) {
-            if (d.photo[i].name == d.hotspot[j].source) {
+            if (mesh.material.map.panoName == d.hotspot[j].source) {
                 geometry2 = new THREE.SphereBufferGeometry(20, 60, 40);
                 material2 = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
                 mesh2 = new THREE.Mesh(geometry2, material2);
@@ -58,11 +62,13 @@ function TPano(d) {
     //体感控制
     let devicecontrol = new THREE.DeviceOrientationControls(camera);
 
-    console.log(scene);
     //初始化贴图
     var material = new THREE.MeshBasicMaterial({ map: texture[0] });
     const mesh = new THREE.Mesh(geometry, material);
+    console.log(mesh);
     scene.add(mesh);
+    //初始化热点
+    initHotspot();
 
     //启动鼠标控制
     mouseController();
@@ -142,6 +148,7 @@ function TPano(d) {
                     material = new THREE.MeshBasicMaterial({ map: texture[intersects[i].object.jumpTo] });
                     mesh.material = material;
                     cleanHotspot();
+                    initHotspot();
                     console.log(scene);
                 }
             }
