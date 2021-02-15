@@ -67,6 +67,14 @@ var tpano = new TPano({
 
 未开发完，持续开发中，趁过年先发布一下
 
+## 开发文档
+
+请看项目目录：/docs/doc.md
+
+建议使用typora打开文档，或者在Git托管的Web页面上直接浏览，markdown语法编写而成
+
+您可以直接点击这里：https://gitee.com/administrator-user/TPano/blob/develop/docs/doc.md
+
 ## Demo
 
 https://administrator-user.gitee.io/tpano/example/
