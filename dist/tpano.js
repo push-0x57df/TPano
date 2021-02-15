@@ -17,12 +17,6 @@ function TPano(d) {
     renderer.setPixelRatio(window.devicePixelRatio);
     el.append(renderer.domElement);
 
-    //调试用：显示三维坐标轴
-    if (d.dbug == true) {
-        const axesHelper = new THREE.AxesHelper(5);
-        scene.add(axesHelper);
-    }
-
 
     //生成全景图片3D对象
     const geometry = new THREE.SphereBufferGeometry(500, 60, 40);
@@ -140,8 +134,11 @@ function TPano(d) {
             // 计算物体和射线的交点
             const intersects = raycaster.intersectObjects(scene.children);
             for (let i = 0; i < intersects.length; i++) {
+                if (d.debug == true) {
+                    console.log('点击坐标：', intersects[i].point);
+                }
                 //检测点击热点是否跳转场地
-                if (intersects[i].object.jumpTo != null && i==0) {
+                if (intersects[i].object.jumpTo != null && i == 0) {
                     material = new THREE.MeshBasicMaterial({ map: texture[intersects[i].object.jumpTo] });
                     mesh.material = material;
                     cleanHotspot();
