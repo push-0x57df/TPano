@@ -232,3 +232,137 @@ var tpano = new TPano({
 | ---- | ----------------------------------- |
 | id   | 当前加载的照片是第几张，从1开始计数 |
 | name | 当前照片的名称                      |
+
+例如我在某次测试中设计了开场加载动画，这或许是个不错的例子，下面是这次的代码：
+
+``` html
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TPano 全景照片查看器</title>
+    <style>
+        * {
+            margin: 0;
+        }
+
+        #pano {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        body {
+            position: relative;
+        }
+
+        #load {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #load-bar-k {
+            width: 40%;
+            height: 1px;
+            background-color: #555555;
+        }
+
+        #load-bar-x {
+            height: 3px;
+            width: 0%;
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+
+<body id="pano">
+    <div id="load">
+        <div id="load-bar-k">
+            <div id="load-bar-x"></div>
+        </div>
+    </div>
+</body>
+<!--引入three.js-->
+<script src="./three.js"></script>
+<script src="../dist/tpano.js"></script>
+<!--设备朝向控制器，不引入无法使用体感控制-->
+<script src="./DeviceOrientationControls.js"></script>
+<!--jquery框架，这里引入用来做一些其它的操作，TPano不依赖它，故你不需要可以不引入-->
+<script src="./jquery-2.1.4.js"></script>
+<script>
+    var tpano = new TPano({
+        el: 'pano',//照片查看器根节点dom的id
+        photo: [
+            //全景照片数组，每项为一张照片
+            {
+                url: '1.jpg',
+                name: '室内'
+            },
+            {
+                url: '2.jfif',
+                name: '建筑'
+            }, {
+                url: '3.jpg',
+                name: '外景'
+            }
+        ],
+        photoLoad: function (e) {
+            console.log(e);
+            closeLoadAnimate();
+        },
+        hotspot: [
+            //全景照片上的热点
+            {
+                source: '室内',//此热点放置在哪张全景照片上
+                position: {//热点所在的位置
+                    x: 51.22617443281311,
+                    y: -77.47768972497656,
+                    z: -491.24706541614586
+                },
+                jumpTo: '建筑'//热点点击后跳往何方
+            },
+            {
+                source: '建筑',
+                position: {
+                    x: -38.877370809465624,
+                    y: -78.21183614810603,
+                    z: -491.8073450832495
+                },
+                jumpTo: '外景'
+            }
+        ],
+        DeviceOrientationControls: false,//设备朝向体感控制，默认关闭
+        rotateAnimateController: true,//镜头自转
+        debug: true,//调试模式
+    });
+
+    //开场加载动画
+    function loadAnimate() {
+        $("#load-bar-k").animate({
+            height: '3px',
+        }, 300);
+        $("#load-bar-x").animate({
+            width: '99%',
+        }, 15000);
+    }
+    $(document).ready(function () {
+        loadAnimate();
+    });
+    //关闭开场动画
+    function closeLoadAnimate(){
+        $("#load").hide();
+    }
+</script>
+
+</html>
+```
+
+尽管这段代码可能随着后续版本更新变得不可用，但我认为它具有一定的参考价值

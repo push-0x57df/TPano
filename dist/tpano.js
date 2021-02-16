@@ -6,7 +6,7 @@ function TPano(d) {
 
     //初始化场景、相机、渲染器
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(90, width / height, 0.1, 1000);//创建相机
+    const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);//创建相机
     //camera.lookAt(500, 0, 0);//视角矫正
     const renderer = new THREE.WebGLRenderer({
         antialias: true,
