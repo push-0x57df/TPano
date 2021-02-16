@@ -25,9 +25,46 @@ function TPano(d) {
     var geometry2;
     var material2;
     var mesh2;
-    for (let i = 0; i < d.photo.length; i++) {
-        texture[i] = new THREE.TextureLoader().load(d.photo[i].url);
+    let loadTextureLoaderCount = 0;
+    loadTextureLoader(loadTextureLoaderCount);
+    //用来加载全景照片
+    function loadTextureLoader(i) {
+        texture[i] = new THREE.TextureLoader().load(
+            d.photo[i].url,
+            // onLoad回调
+            function () {
+                loadTextureLoaderEnd();
+            },
+
+            // 目前暂不支持onProgress的回调
+            function (e) {
+                console.log(e);
+            },
+
+            // onError回调
+            function (err) {
+                console.error('An error happened.');
+            }
+        );
+    }
+    //用来控制加载下一张全景照片
+    function loadTextureLoaderEnd() {
+        let i = loadTextureLoaderCount;
         texture[i].panoName = d.photo[i].name;
+        d.photoLoad({
+            'all': d.photo.length,
+            'loading': {
+                'id': i + 1,
+                'name': d.photo[i].name
+            },
+            'Leftover': d.photo.length - i - 1
+        });
+        if(loadTextureLoaderCount == 0){
+            initMeshBasicMaterial();
+        }
+        if (loadTextureLoaderCount < d.photo.length - 1) {
+            loadTextureLoader(++loadTextureLoaderCount);
+        }
     }
 
     //生成热点
@@ -63,12 +100,15 @@ function TPano(d) {
     let devicecontrol = new THREE.DeviceOrientationControls(camera);
 
     //初始化贴图
-    var material = new THREE.MeshBasicMaterial({ map: texture[0] });
-    const mesh = new THREE.Mesh(geometry, material);
-    console.log(mesh);
-    scene.add(mesh);
-    //初始化热点
-    initHotspot();
+    let mesh;
+    function initMeshBasicMaterial() {
+        var material = new THREE.MeshBasicMaterial({ map: texture[0] });
+        mesh = new THREE.Mesh(geometry, material);
+        console.log(mesh);
+        scene.add(mesh);
+        //初始化热点
+        initHotspot();
+    }
 
     //启动鼠标控制
     mouseController();
