@@ -120,7 +120,11 @@
     });
     //关闭开场动画
     function closeLoadAnimate(){
-        $("#load").hide();
+        $("#load-bar-x").stop();
+        $("#load-bar-x").animate({
+            width: '100%',
+        }, 1000);
+        setTimeout('$("#load").hide()',1500);
     }
 </script>
 
