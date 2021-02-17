@@ -14,7 +14,7 @@ function TPano(d) {
         //pc端视角
         fov = 60;
     }
-    const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);//创建相机
+    const camera = new THREE.PerspectiveCamera(fov, width / height, 0.1, 1000);//创建相机
     //camera.lookAt(500, 0, 0);//视角矫正
     const renderer = new THREE.WebGLRenderer({
         antialias: true,
@@ -29,6 +29,8 @@ function TPano(d) {
     //生成全景图片3D对象
     const geometry = new THREE.SphereBufferGeometry(500, 60, 40);
     geometry.scale(- 1, 1, 1);
+    let mesh = new THREE.Mesh(geometry);
+    scene.add(mesh);
     var texture = Array();
     var geometry2;
     var material2;
@@ -68,7 +70,7 @@ function TPano(d) {
             'Leftover': d.photo.length - i - 1
         });
         if (loadTextureLoaderCount == 0) {
-            initMeshBasicMaterial();
+            switchPhotoN(0);
         }
         if (loadTextureLoaderCount < d.photo.length - 1) {
             loadTextureLoader(++loadTextureLoaderCount);
@@ -87,6 +89,37 @@ function TPano(d) {
         }
 
         if (i < d.photo.length && i >= 0) {
+            let fov;
+            if (el.clientWidth <= 700 || el.clientWidth < el.clientHeight) {
+                //手机端视角
+                try {
+                    fov = d.photo[i].fov.phone;
+                } catch (error) {
+                    fov = null;
+                }
+            } else {
+                //pc端视角
+                try {
+                    fov = d.photo[i].fov.pc;
+                } catch (error) {
+                    fov = null;
+                }
+            }
+            if(fov != null){
+                camera.fov = fov;
+                camera.updateProjectionMatrix();
+            }else{
+                if (el.clientWidth <= 700 || el.clientWidth < el.clientHeight) {
+                    //手机端视角
+                    fov = 90;
+                } else {
+                    //pc端视角
+                    fov = 60;
+                } 
+                camera.fov = fov;
+                camera.updateProjectionMatrix();
+            }
+            console.log(texture);
             material = new THREE.MeshBasicMaterial({ map: texture[i] });
             mesh.material = material;
             cleanHotspot();
@@ -133,17 +166,6 @@ function TPano(d) {
 
     //体感控制
     let devicecontrol = new THREE.DeviceOrientationControls(camera);
-
-    //初始化贴图
-    let mesh;
-    function initMeshBasicMaterial() {
-        var material = new THREE.MeshBasicMaterial({ map: texture[0] });
-        mesh = new THREE.Mesh(geometry, material);
-        console.log(mesh);
-        scene.add(mesh);
-        //初始化热点
-        initHotspot();
-    }
 
     //启动鼠标控制
     mouseController();
