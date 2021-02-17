@@ -6,6 +6,14 @@ function TPano(d) {
 
     //初始化场景、相机、渲染器
     const scene = new THREE.Scene();
+    let fov;
+    if (el.clientWidth <= 700 || el.clientWidth < el.clientHeight) {
+        //手机端视角
+        fov = 90;
+    }else{
+        //pc端视角
+        fov = 60;
+    }
     const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);//创建相机
     //camera.lookAt(500, 0, 0);//视角矫正
     const renderer = new THREE.WebGLRenderer({
