@@ -36,7 +36,7 @@ var tpano = new TPano({
 
 注：el上请填写某个容器html元素的id
 
-## 添加第一个场景
+## 添加第一张照片
 
 ``` html
 <!DOCTYPE html>
@@ -366,3 +366,20 @@ var tpano = new TPano({
 ```
 
 尽管这段代码可能随着后续版本更新变得不可用，但我认为它具有一定的参考价值
+
+## 切换照片
+
+使用下面提供的函数可以在照片之间切换：
+
+``` javascript
+tpano.re.switchPhoto(index);
+```
+
+其中index是照片的索引，从0开始，按照在创建TPano实例时photo数据项传入的顺序排序
+
+值得注意的是此函数是有返回值的，如果传递了错误的index，它的返回就像这样：
+
+``` json
+{status: "ERROR", msg: "无效的照片索引"}
+```
+

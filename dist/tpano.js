@@ -10,7 +10,7 @@ function TPano(d) {
     if (el.clientWidth <= 700 || el.clientWidth < el.clientHeight) {
         //手机端视角
         fov = 90;
-    }else{
+    } else {
         //pc端视角
         fov = 60;
     }
@@ -67,12 +67,39 @@ function TPano(d) {
             },
             'Leftover': d.photo.length - i - 1
         });
-        if(loadTextureLoaderCount == 0){
+        if (loadTextureLoaderCount == 0) {
             initMeshBasicMaterial();
         }
         if (loadTextureLoaderCount < d.photo.length - 1) {
             loadTextureLoader(++loadTextureLoaderCount);
         }
+    }
+
+    /**
+     * 切换全景照片
+     * @param int i 选择照片张数
+     * @return json status，正常返回OK，不正常返回ERROR；msg具体信息
+     */
+    function switchPhotoN(i) {
+        let response = {
+            status: 'ERROR',
+            msg: '系统出错'
+        }
+
+        if (i < d.photo.length && i >= 0) {
+            material = new THREE.MeshBasicMaterial({ map: texture[i] });
+            mesh.material = material;
+            cleanHotspot();
+            initHotspot();
+            response = {
+                status: 'OK',
+                msg: '切换成功'
+            }
+        } else {
+            response.msg = '无效的照片索引';
+        }
+
+        return response;
     }
 
     //生成热点
@@ -193,10 +220,7 @@ function TPano(d) {
                 }
                 //检测点击热点是否跳转场地
                 if (intersects[i].object.jumpTo != null && i == 0) {
-                    material = new THREE.MeshBasicMaterial({ map: texture[intersects[i].object.jumpTo] });
-                    mesh.material = material;
-                    cleanHotspot();
-                    initHotspot();
+                    switchPhotoN(intersects[i].object.jumpTo);
                     console.log(scene);
                 }
             }
@@ -289,6 +313,9 @@ function TPano(d) {
             el.style.height = height + 'px';
             renderer.domElement.style.width = width + 'px';
             renderer.domElement.style.height = height + 'px';
+        },
+        switchPhoto: function switchPhoto(i){
+            return switchPhotoN(i);
         }
     }
 }
