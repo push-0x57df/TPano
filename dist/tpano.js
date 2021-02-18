@@ -232,7 +232,7 @@ function TPano(d) {
 
                 console.log(lAdd);
                 const fov = camera.fov - lAdd * 0.3;
-                camera.fov = THREE.MathUtils.clamp(fov, 10, 75);
+                camera.fov = THREE.MathUtils.clamp(fov, 10, 90);
                 camera.updateProjectionMatrix();
             }
 
