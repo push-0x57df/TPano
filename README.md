@@ -73,10 +73,8 @@ var tpano = new TPano({
 
 建议使用typora打开文档，或者在Git托管的Web页面上直接浏览，markdown语法编写而成
 
-您可以直接点击这里：https://gitee.com/administrator-user/TPano/blob/develop/docs/doc.md
+您可以直接点击这里：https://gitee.com/push_0x57df/TPano/blob/develop/docs/doc.md
 
 ## Demo
 
-https://administrator-user.gitee.io/tpano/example/
-
-（暂未做加载进度展示，故打开白屏，此时正在下载照片数据，请耐心等待片刻）
+https://push_0x57df.gitee.io/tpano
