@@ -77,4 +77,4 @@ var tpano = new TPano({
 
 ## Demo
 
-https://push_0x57df.gitee.io/tpano
+https://push_0x57df.gitee.io/tpano/example
