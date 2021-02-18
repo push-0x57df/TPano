@@ -105,17 +105,17 @@ function TPano(d) {
                     fov = null;
                 }
             }
-            if(fov != null){
+            if (fov != null) {
                 camera.fov = fov;
                 camera.updateProjectionMatrix();
-            }else{
+            } else {
                 if (el.clientWidth <= 700 || el.clientWidth < el.clientHeight) {
                     //手机端视角
                     fov = 90;
                 } else {
                     //pc端视角
                     fov = 60;
-                } 
+                }
                 camera.fov = fov;
                 camera.updateProjectionMatrix();
             }
@@ -169,6 +169,8 @@ function TPano(d) {
 
     //启动鼠标控制
     mouseController();
+    //启动多点触控
+    phoneController();
 
     //动画绑定
     function animate() {
@@ -196,6 +198,46 @@ function TPano(d) {
     el.addEventListener('pointerdown', function () {
         rotateAnimateController = false;
     });
+
+    //手机端多点触控
+    let mouseFovControllerSport = true;//用来开闭鼠标控制支持的，如果用户在进行放大手势，应该将鼠标视角控制锁定
+    function phoneController() {
+        let oldL = 0;
+        let x1, x2, y1, y2, l;
+        document.addEventListener('touchstart', function (event) {
+            if (event.touches.length == 2) {
+                mouseFovControllerSport = false;
+                x1 = event.touches[0].clientX;
+                x2 = event.touches[1].clientX;
+                y1 = event.touches[0].clientY;
+                y2 = event.touches[1].clientY;
+                oldL = Math.sqrt(Math.pow(Math.abs(x2 - x1), 2) + Math.pow(Math.abs(y2 - y1), 2));//求两点间长度
+            } else {
+                mouseFovControllerSport = true;
+            }
+        }, false);
+        document.addEventListener('touchmove', function (event) {
+            event.preventDefault(); // prevent scrolling
+            event.stopPropagation();
+            if (event.touches.length == 2) {
+                x1 = event.touches[0].clientX;
+                x2 = event.touches[1].clientX;
+                y1 = event.touches[0].clientY;
+                y2 = event.touches[1].clientY;
+
+                l = Math.sqrt(Math.pow(Math.abs(x2 - x1), 2) + Math.pow(Math.abs(y2 - y1), 2));//求两点间长度
+
+                let lAdd = l - oldL;//长度增量
+                oldL = l;
+
+                console.log(lAdd);
+                const fov = camera.fov - lAdd * 0.3;
+                camera.fov = THREE.MathUtils.clamp(fov, 10, 75);
+                camera.updateProjectionMatrix();
+            }
+
+        }, false);
+    }
 
     //封装鼠标控制
     function mouseController() {
@@ -284,7 +326,9 @@ function TPano(d) {
             }
             lon = (onPointerDownMouseX - event.clientX) * rate + onPointerDownLon;
             lat = (event.clientY - onPointerDownMouseY) * rate + onPointerDownLat;
-            update();
+            if (mouseFovControllerSport) {
+                update();
+            }
         }
 
         function onPointerUp() {
@@ -336,7 +380,7 @@ function TPano(d) {
             renderer.domElement.style.width = width + 'px';
             renderer.domElement.style.height = height + 'px';
         },
-        switchPhoto: function switchPhoto(i){
+        switchPhoto: function switchPhoto(i) {
             return switchPhotoN(i);
         }
     }
