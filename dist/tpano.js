@@ -398,8 +398,9 @@ function TPano(d) {
         renderer.render(scene, camera);
     }
 
-    //宽高重设
+    //创建外部访问接口函数
     this.re = {
+        //宽高重设
         resizeRendererToDisplaySize: function resizeRendererToDisplaySize(width, height) {
             camera.aspect = width / height;
             camera.updateProjectionMatrix();
