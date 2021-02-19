@@ -58,18 +58,21 @@ function TPano(d) {
         );
     }
     //用来控制加载下一张全景照片
+    let loadTextureMsg;
     function loadTextureLoaderEnd() {
         let i = loadTextureLoaderCount;
         texture[i].panoName = d.photo[i].name;
-        d.photoLoad({
+        loadTextureMsg = {
             'all': d.photo.length,
             'loading': {
-                'id': i + 1,
-                'name': d.photo[i].name
+                id: i + 1,
+                name: d.photo[i].name
             },
             'Leftover': d.photo.length - i - 1
-        });
+        };
+        d.photoLoad(loadTextureMsg);
         if (loadTextureLoaderCount == 0) {
+            //初始化加载第一张图片
             switchPhotoN(0);
         }
         if (loadTextureLoaderCount < d.photo.length - 1) {
@@ -89,45 +92,71 @@ function TPano(d) {
         }
 
         if (i < d.photo.length && i >= 0) {
-            let fov;
-            if (el.clientWidth <= 700 || el.clientWidth < el.clientHeight) {
-                //手机端视角
-                try {
-                    fov = d.photo[i].fov.phone;
-                } catch (error) {
-                    fov = null;
-                }
+            //回调通知：注意全景图片换页事件开始，应该检查全景图片是否下载完毕，主要是用于做进度提示功能
+            if (loadTextureMsg.all - loadTextureMsg.Leftover >= i + 1) {
+                //已加载完成，无需等待
+                d.switchLoad({
+                    loading: {
+                        id: i + 1,
+                        name: d.photo[i].name
+                    },
+                    status: 'end'
+                });
+                switchGo();
             } else {
-                //pc端视角
-                try {
-                    fov = d.photo[i].fov.pc;
-                } catch (error) {
-                    fov = null;
-                }
+                //未加载完成，请等待一秒后再尝试
+                d.switchLoad({
+                    loading: {
+                        id: i + 1,
+                        name: d.photo[i].name
+                    },
+                    status: 'loading'
+                });
+                setTimeout(switchPhotoN, 1000,i);
             }
-            if (fov != null) {
-                camera.fov = fov;
-                camera.updateProjectionMatrix();
-            } else {
+
+            function switchGo() {
+                let fov;
                 if (el.clientWidth <= 700 || el.clientWidth < el.clientHeight) {
                     //手机端视角
-                    fov = 90;
+                    try {
+                        fov = d.photo[i].fov.phone;
+                    } catch (error) {
+                        fov = null;
+                    }
                 } else {
                     //pc端视角
-                    fov = 60;
+                    try {
+                        fov = d.photo[i].fov.pc;
+                    } catch (error) {
+                        fov = null;
+                    }
                 }
-                camera.fov = fov;
-                camera.updateProjectionMatrix();
+                if (fov != null) {
+                    camera.fov = fov;
+                    camera.updateProjectionMatrix();
+                } else {
+                    if (el.clientWidth <= 700 || el.clientWidth < el.clientHeight) {
+                        //手机端视角
+                        fov = 90;
+                    } else {
+                        //pc端视角
+                        fov = 60;
+                    }
+                    camera.fov = fov;
+                    camera.updateProjectionMatrix();
+                }
+                console.log(texture);
+                material = new THREE.MeshBasicMaterial({ map: texture[i] });
+                mesh.material = material;
+                cleanHotspot();
+                initHotspot();
+                response = {
+                    status: 'OK',
+                    msg: '切换成功'
+                }
             }
-            console.log(texture);
-            material = new THREE.MeshBasicMaterial({ map: texture[i] });
-            mesh.material = material;
-            cleanHotspot();
-            initHotspot();
-            response = {
-                status: 'OK',
-                msg: '切换成功'
-            }
+
         } else {
             response.msg = '无效的照片索引';
         }
@@ -381,7 +410,7 @@ function TPano(d) {
             renderer.domElement.style.height = height + 'px';
         },
         switchPhoto: function switchPhoto(i) {
-            return switchPhotoN(i);
+            return switchPhotoN(i - 1);
         }
     }
 }

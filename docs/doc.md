@@ -1,4 +1,4 @@
-# 说明文档
+# 开发文档
 
 本文档使用markdown语法编写，建议使用Typora查看
 
@@ -383,6 +383,206 @@ tpano.re.switchPhoto(index);
 {status: "ERROR", msg: "无效的照片索引"}
 ```
 
+## 切换照片加载回调
+
+切换场景时可能因为需要切换的场景图片还未下载完成，所以会导致暂时无法加载，造成视觉上的卡顿
+
+使用切换场景加载回调函数，我们就知道当前需要切换的场景有没有加载完成，每当切换场景函数触发时，它都会以一秒为周期向外报告加载情况
+
+加载进度回调应该在创建TPano实例时同时创建，就像这样：
+
+``` javascript
+var tpano = new TPano({
+	··· ···
+    switchLoad:function(e){
+        console.log(e);
+    },
+   	··· ···
+})
+```
+
+它每次触发会显示这样的信息：
+
+``` json
+{
+    loading: {
+        id: 3, 
+        name: "外景"
+    },
+    status: "loading"
+}
+```
+
+其中数据释义：
+
+| key     | 说明                                                         |
+| ------- | ------------------------------------------------------------ |
+| loading | 当前正在加载的照片                                           |
+| status  | 状态：只有两种状态，loading或者end，分别表示正在加载和加载完成 |
+
+其中key：loading也是json对象，它的数据释义：
+
+| key  | 说明                                |
+| ---- | ----------------------------------- |
+| id   | 当前加载的照片是第几张，从1开始计数 |
+| name | 当前照片的名称                      |
+
+例如我在某次测试中使用了这个函数，这或许是个不错的例子，下面是这次的代码：
+
+``` html
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TPano 全景照片查看器</title>
+    <style>
+        * {
+            margin: 0;
+        }
+
+        #pano {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        body {
+            position: relative;
+        }
+
+        #load {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(46, 46, 46, 0.5);
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #load-bar-k {
+            width: 40%;
+            height: 1px;
+            background-color: #555555;
+        }
+
+        #load-bar-x {
+            height: 3px;
+            width: 0%;
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+
+<body id="pano">
+    <div id="load">
+        <div id="load-bar-k">
+            <div id="load-bar-x"></div>
+        </div>
+    </div>
+</body>
+<!--引入three.js-->
+<script src="./three.js"></script>
+<script src="../dist/tpano.js"></script>
+<!--设备朝向控制器，不引入无法使用体感控制-->
+<script src="./DeviceOrientationControls.js"></script>
+<!--jquery框架，这里引入用来做一些其它的操作，TPano不依赖它，故你不需要可以不引入-->
+<script src="./jquery-2.1.4.js"></script>
+<script>
+    var tpano = new TPano({
+        el: 'pano',//照片查看器根节点dom的id
+        photo: [
+            //全景照片数组，每项为一张照片
+            {
+                url: '1.jpg',
+                name: '室内',
+                fov: {
+                    pc: 100,
+                    phone: 90
+                }
+            },
+            {
+                url: '2.jfif',
+                name: '建筑'
+            }, {
+                url: '3.jpg',
+                name: '外景'
+            }
+        ],
+        photoLoad: function (e) {
+            console.log(e);
+            closeLoadAnimate();
+        },
+        switchLoad: function (e) {
+            console.log(e);
+            switch (e.status) {
+                case 'loading':
+                    loadAnimate();
+                    break;
+                case 'end':
+                    closeLoadAnimate();
+                    break;
+                default:
+                    alert('加载出错');
+                    break;
+            }
+        },
+        hotspot: [
+            //全景照片上的热点
+            {
+                source: '室内',//此热点放置在哪张全景照片上
+                position: {//热点所在的位置
+                    x: 51.22617443281311,
+                    y: -77.47768972497656,
+                    z: -491.24706541614586
+                },
+                jumpTo: '建筑'//热点点击后跳往何方
+            },
+            {
+                source: '建筑',
+                position: {
+                    x: -38.877370809465624,
+                    y: -78.21183614810603,
+                    z: -491.8073450832495
+                },
+                jumpTo: '外景'
+            }
+        ],
+        DeviceOrientationControls: false,//设备朝向体感控制，默认关闭
+        rotateAnimateController: true,//镜头自转
+        debug: false,//调试模式
+    });
+
+    //开场加载动画
+    function loadAnimate() {
+        $("#load").show();
+        $("#load-bar-x").width('0%');
+        $("#load-bar-k").animate({
+            height: '3px',
+        }, 300);
+        $("#load-bar-x").animate({
+            width: '99%',
+        }, 15000);
+    }
+    $(document).ready(function () {
+        loadAnimate();
+    });
+    //关闭开场动画
+    function closeLoadAnimate() {
+        $("#load-bar-x").stop();
+        $("#load-bar-x").animate({
+            width: '100%',
+        }, 1000);
+        setTimeout('$("#load").hide()', 1500);
+    }
+</script>
+
+</html>
+```
+
 ## 为单张设置相机视野
 
 考虑到可能需要单独调整每张图片加载时的相机视野，我提供了一个接口供大家修改相机视野角度，可以单独为pc和手机设置不同值
@@ -413,3 +613,4 @@ var tpano = new TPano({
 ```
 
 但是请注意，相机是有默认视野角度的，如果设置不合理会导致黑屏，也可能导致视野边缘严重变形（此时请调小视野角度）
+
