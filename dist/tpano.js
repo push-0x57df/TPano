@@ -400,7 +400,11 @@ function TPano(d) {
 
     //创建外部访问接口函数
     this.re = {
-        //宽高重设
+        /**
+         * 宽高重设
+         * @param doble width 宽度
+         * @param double height 高度
+         */
         resizeRendererToDisplaySize: function resizeRendererToDisplaySize(width, height) {
             camera.aspect = width / height;
             camera.updateProjectionMatrix();
@@ -410,8 +414,14 @@ function TPano(d) {
             renderer.domElement.style.width = width + 'px';
             renderer.domElement.style.height = height + 'px';
         },
+        /**
+         * 全景照片切换函数
+         * 该函数执行不一定能立刻切换，可能因为照片没有下载完毕不能切换，请于开发文档关注此方法的回调函数
+         * @param int i 需要切换哪张照片
+         */
         switchPhoto: function switchPhoto(i) {
             return switchPhotoN(i - 1);
-        }
+        },
+
     }
 }
