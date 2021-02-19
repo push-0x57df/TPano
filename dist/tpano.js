@@ -387,14 +387,14 @@ function TPano(d) {
             //console.log('x=' + x + 'y=' + y + 'z=' + z);
             //console.log('x=' + THREE.MathUtils.radToDeg(camera.rotation.x), 'y=' + THREE.MathUtils.radToDeg(camera.rotation.y));
             camera.lookAt(x, y, z);
-            if (d.DeviceOrientationControls == true) {
-                devicecontrol.update();
-            }
         }
     }
 
     //渲染
     function render() {
+        if (d.DeviceOrientationControls == true) {
+            devicecontrol.update();
+        }
         renderer.render(scene, camera);
     }
 
