@@ -422,6 +422,12 @@ function TPano(d) {
         switchPhoto: function switchPhoto(i) {
             return switchPhotoN(i - 1);
         },
-
+        /**
+         * 切换体感
+         * @param bool e 体感控制开关，true表示打开，false表示关闭
+         */
+        switchGyro: function switchGyro(e){
+            d.DeviceOrientationControls = e;
+        }
     }
 }

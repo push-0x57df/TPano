@@ -45,16 +45,23 @@
 
         #controller-y {
             position: absolute;
-            bottom: 30px;
-            right: 20px;
+            bottom: 26px;
+            right: 16px;
+            display: flex;
+            flex-direction: column;
+            background-color: rgba(20, 20, 20, 0.4);
+            border-radius: 50px;
+            padding: 2px;
         }
 
         .item {
             background-color: #ffffff;
             border-radius: 50px;
-            width: 30px;
-            height: 30px;
+            box-sizing :border-box;
+            width: 36px;
+            height: 36px;
             padding: 6px;
+            margin: 3.2px;
         }
 
         .item>img {
@@ -72,6 +79,9 @@
     </div>
 
     <div id="controller-y">
+        <div id="gyro" onclick="switchGyro()" class="item">
+            <img src="./img/bar/gyro.png" alt="体感">
+        </div>
         <div class="item">
             <img src="./img/bar/function.png" alt="功能">
         </div>
@@ -172,6 +182,13 @@
             width: '100%',
         }, 1000);
         setTimeout('$("#load").hide()', 1500);
+    }
+
+    //切换体感
+    let switchGyroStatus = false;
+    function switchGyro(){
+        switchGyroStatus = !switchGyroStatus;
+        tpano.re.switchGyro(switchGyroStatus);
     }
 </script>
 
