@@ -112,7 +112,7 @@ function TPano(d) {
                     },
                     status: 'loading'
                 });
-                setTimeout(switchPhotoN, 1000,i);
+                setTimeout(switchPhotoN, 1000, i);
             }
 
             function switchGo() {
@@ -393,6 +393,13 @@ function TPano(d) {
     //渲染
     function render() {
         if (d.DeviceOrientationControls == true) {
+            //检测陀螺仪状态，比如电脑不支持陀螺仪，回调一个消息告诉前台
+            if (camera.rotation._x == -1.5707963267948966 && camera.rotation._y == 0 && camera.rotation._z == 0) {
+                //当相机对准这个坐标表示很可能设备不支持陀螺仪
+                d.gyroSport(false);
+            }else{
+                d.gyroSport(true);
+            }
             devicecontrol.update();
         }
         renderer.render(scene, camera);
@@ -426,7 +433,7 @@ function TPano(d) {
          * 切换体感
          * @param bool e 体感控制开关，true表示打开，false表示关闭
          */
-        switchGyro: function switchGyro(e){
+        switchGyro: function switchGyro(e) {
             d.DeviceOrientationControls = e;
         }
     }

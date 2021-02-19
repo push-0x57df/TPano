@@ -143,6 +143,28 @@ var tpano = new TPano({
 
 注意：打开此功能会使您设置的开场视角自转功能冲突
 
+使用switchGyro函数接口则能允许您在任何时候打开陀螺仪，像这样：
+
+```javascript
+tpano.re.switchGyro(true);
+```
+
+注意这里的tpano是TPano的实例变量，参数true和false则标注了是打开还是关闭陀螺仪控制
+
+值得注意的是部分情形下可能设备不支持陀螺仪，我们为此准备了一个回调函数，当设备不支持陀螺仪时或因为浏览器限制不支持时将发送回调消息。它是这样的：
+
+``` javascript
+var tpano = new TPano({
+	··· ···
+        gyroSport: function (e) {
+    		
+        },
+   	··· ···
+})
+```
+
+这里的参数e只有两种可能，true和false，告诉我们可能陀螺仪没法启动
+
 ## 开场视角自转
 
 使用rotateAnimateController设置是否使用体感控制，请设置bool值，就像这样：

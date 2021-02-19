@@ -107,6 +107,7 @@
 <!--jquery框架，这里引入用来做一些其它的操作，TPano不依赖它，故你不需要可以不引入-->
 <script src="./jquery-2.1.4.js"></script>
 <script>
+    let msgStatus = false;
     var tpano = new TPano({
         el: 'pano',//照片查看器根节点dom的id
         photo: [
@@ -143,6 +144,12 @@
                 default:
                     alert('加载出错');
                     break;
+            }
+        },
+        gyroSport: function (e) {
+            if(!e && !msgStatus){
+                msgStatus = true;
+                alert('设备可能不支持陀螺仪,或者您没有启用https。多数浏览器安全策略只对启用了https的网站提供陀螺仪服务。');
             }
         },
         hotspot: [
