@@ -42,6 +42,25 @@
             width: 0%;
             background-color: #ffffff;
         }
+
+        #controller-y {
+            position: absolute;
+            bottom: 30px;
+            right: 20px;
+        }
+
+        .item {
+            background-color: #ffffff;
+            border-radius: 50px;
+            width: 30px;
+            height: 30px;
+            padding: 6px;
+        }
+
+        .item>img {
+            width: 100%;
+            height: 100%;
+        }
     </style>
 </head>
 
@@ -49,6 +68,12 @@
     <div id="load">
         <div id="load-bar-k">
             <div id="load-bar-x"></div>
+        </div>
+    </div>
+
+    <div id="controller-y">
+        <div class="item">
+            <img src="./img/bar/function.png" alt="功能">
         </div>
     </div>
 </body>
@@ -68,7 +93,7 @@
                 url: '1.jpg',
                 name: '室内',
                 fov: {
-                    pc: 100,
+                    pc: 62,
                     phone: 90
                 }
             },
@@ -137,6 +162,8 @@
     }
     $(document).ready(function () {
         loadAnimate();
+        //解决部分手机浏览器给的窗口高度不正常问题
+        tpano.re.resizeRendererToDisplaySize($(window).width(),$(window).height());
     });
     //关闭开场动画
     function closeLoadAnimate() {
