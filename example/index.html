@@ -45,7 +45,7 @@
 
         #controller-y {
             position: absolute;
-            bottom: 26px;
+            bottom: 206px;
             right: 16px;
             display: flex;
             flex-direction: column;
@@ -57,7 +57,7 @@
         .item {
             background-color: #ffffff;
             border-radius: 50px;
-            box-sizing :border-box;
+            box-sizing: border-box;
             width: 36px;
             height: 36px;
             padding: 6px;
@@ -70,7 +70,7 @@
             height: 100%;
         }
 
-        .point{
+        .point {
             position: absolute;
             width: 10px;
             height: 10px;
@@ -78,6 +78,54 @@
             border-radius: 50px;
             right: 0;
             bottom: -2px;
+        }
+
+        #photo-box {
+            position: absolute;
+            width: 100vw;
+            padding: 8px 10px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            box-sizing: border-box;
+            display: none;
+            opacity: 0;
+            height: 0;
+            overflow-y: hidden;
+        }
+
+        #photo-box>div{
+            background-color: rgba(20, 20, 20, 0.4);
+            border-radius: 5px;
+            display: flex;
+            overflow-x: auto;
+            padding: 12px 18px;
+            width: 100%;
+            position: relative;
+            overflow-y: hidden;
+        }
+
+        .photo-box-div {
+            margin: 0 4px;
+            position: relative;
+        }
+
+        .photo-box-img {
+            width: 200px;
+            height: 120px;
+            background-color: #ffffffcc;
+        }
+
+        .photo-box-p {
+            position: absolute;
+            left: 0px;
+            bottom: 0px;
+            text-align: center;
+            width: 200px;
+            color: #ffffff;
+            padding: 2px 0;
+            background-color: rgba(20, 20, 20, 0.4);
+            opacity: 0;
         }
     </style>
 </head>
@@ -90,12 +138,25 @@
     </div>
 
     <div id="controller-y">
+        <div id="photo" onclick="switchPhoto()" class="item">
+            <img src="./img/bar/photo.png" alt="照片">
+            <div class="point"></div>
+        </div>
         <div id="gyro" onclick="switchGyro()" class="item">
             <img src="./img/bar/gyro.png" alt="体感">
             <div class="point"></div>
         </div>
         <div class="item">
             <img src="./img/bar/function.png" alt="功能">
+        </div>
+    </div>
+
+    <div id="photo-box">
+        <div>
+            <div hidden class="photo-box-div" id="example">
+                <img class="photo-box-img" src="" alt="">
+                <p class="photo-box-p">示例</p>
+            </div>
         </div>
     </div>
 </body>
@@ -108,26 +169,27 @@
 <script src="./jquery-2.1.4.js"></script>
 <script>
     let msgStatus = false;
+    let panoPhoto = [
+        //全景照片数组，每项为一张照片
+        {
+            url: '1.jpg',
+            name: '室内',
+            fov: {
+                pc: 62,
+                phone: 90
+            }
+        },
+        {
+            url: '2.jfif',
+            name: '建筑'
+        }, {
+            url: '3.jpg',
+            name: '外景'
+        }
+    ];
     var tpano = new TPano({
         el: 'pano',//照片查看器根节点dom的id
-        photo: [
-            //全景照片数组，每项为一张照片
-            {
-                url: '1.jpg',
-                name: '室内',
-                fov: {
-                    pc: 62,
-                    phone: 90
-                }
-            },
-            {
-                url: '2.jfif',
-                name: '建筑'
-            }, {
-                url: '3.jpg',
-                name: '外景'
-            }
-        ],
+        photo: panoPhoto,
         photoLoad: function (e) {
             console.log(e);
             closeLoadAnimate();
@@ -147,7 +209,7 @@
             }
         },
         gyroSport: function (e) {
-            if(!e && !msgStatus){
+            if (!e && !msgStatus) {
                 msgStatus = true;
                 alert('设备可能不支持陀螺仪,或者您没有启用https。多数浏览器安全策略只对启用了https的网站提供陀螺仪服务。');
             }
@@ -192,7 +254,7 @@
     $(document).ready(function () {
         loadAnimate();
         //解决部分手机浏览器给的窗口高度不正常问题
-        tpano.re.resizeRendererToDisplaySize($(window).width(),$(window).height());
+        tpano.re.resizeRendererToDisplaySize($(window).width(), $(window).height());
     });
     //关闭开场动画
     function closeLoadAnimate() {
@@ -205,19 +267,67 @@
 
     //切换体感
     let switchGyroStatus = false;
-    function switchGyro(){
+    function switchGyro() {
         switchGyroStatus = !switchGyroStatus;
         tpano.re.switchGyro(switchGyroStatus);
         switchGyroPoint();
     }
     function switchGyroPoint() {
-        if(switchGyroStatus){
+        if (switchGyroStatus) {
             $('#gyro>.point').show();
-        }else{
+        } else {
             $('#gyro>.point').hide();
         }
     }
     switchGyroPoint();
+
+    //切换照片功能展开按钮
+    let switchPhotoStatus = false;
+    function switchPhoto() {
+        switchPhotoStatus = !switchPhotoStatus;
+        if (switchPhotoStatus) {
+            $("#photo-box").css('display', 'flex');
+            $("#photo-box").animate({
+                opacity: 1,
+                height: '160px'
+            }, 800);
+            setTimeout(() => {
+                $(".photo-box-p").animate({
+                    opacity: 1
+                });
+            }, 800);
+        } else {
+            $(".photo-box-p").animate({
+                opacity: 0
+            });
+            setTimeout(() => {
+                $("#photo-box").animate({
+                    opacity: 0,
+                    height: '0'
+                }, 800);
+            }, 200);
+            setTimeout(() => {
+                $("#photo-box").css('display', 'none');
+            }, 1000);
+        }
+        switchPhotoPoint();
+    }
+    function switchPhotoPoint() {
+        if (switchPhotoStatus) {
+            $('#photo>.point').show();
+        } else {
+            $('#photo>.point').hide();
+        }
+    }
+    switchPhotoPoint();
+
+    //创建全景照片相册
+    function cratePhoneBox() {
+        for (let i = 0; i < panoPhoto.length; i++) {
+            $('#photo-box>div').append('<div onclick="tpano.re.switchPhoto(' + (i + 1) + ')" class="photo-box-div"><img class="photo-box-img" src="' + panoPhoto[i].url + '" alt="第' + (i + 1) + '张照片"><p class="photo-box-p">' + panoPhoto[i].name + '</p></div>');
+        }
+    }
+    cratePhoneBox();
 </script>
 
 </html>
