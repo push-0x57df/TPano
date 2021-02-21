@@ -52,6 +52,9 @@
             background-color: rgba(20, 20, 20, 0.4);
             border-radius: 50px;
             padding: 2px;
+            overflow: hidden;
+            width: 42px;
+            height: 128px
         }
 
         .item {
@@ -94,7 +97,7 @@
             overflow-y: hidden;
         }
 
-        #photo-box>div{
+        #photo-box>div {
             background-color: rgba(20, 20, 20, 0.4);
             border-radius: 5px;
             display: flex;
@@ -127,6 +130,11 @@
             background-color: rgba(20, 20, 20, 0.4);
             opacity: 0;
         }
+
+        .item-s {
+            position: absolute;
+            bottom: 2px;
+        }
     </style>
 </head>
 
@@ -138,15 +146,15 @@
     </div>
 
     <div id="controller-y">
-        <div id="photo" onclick="switchPhoto()" class="item">
+        <div id="photo" onclick="switchPhoto()" class="item item-f">
             <img src="./img/bar/photo.png" alt="照片">
             <div class="point"></div>
         </div>
-        <div id="gyro" onclick="switchGyro()" class="item">
+        <div id="gyro" onclick="switchGyro()" class="item item-f">
             <img src="./img/bar/gyro.png" alt="体感">
             <div class="point"></div>
         </div>
-        <div class="item">
+        <div class="item item-s" onclick="hidefunction()">
             <img src="./img/bar/function.png" alt="功能">
         </div>
     </div>
@@ -168,7 +176,7 @@
 <!--jquery框架，这里引入用来做一些其它的操作，TPano不依赖它，故你不需要可以不引入-->
 <script src="./jquery-2.1.4.js"></script>
 <script>
-    let msgStatus = false;
+    let msgStatus = false, gi = 0;
     let panoPhoto = [
         //全景照片数组，每项为一张照片
         {
@@ -193,6 +201,18 @@
         photoLoad: function (e) {
             console.log(e);
             closeLoadAnimate();
+            if (gi == 0) {
+                //第一张照片加载完毕
+                
+                //6秒后隐藏功能键
+                setTimeout(() => {
+                    hidefunction();
+                }, 6000);
+
+                //这个时间点开始加载相册，此功能未经后端优化的情况下加载的是原始照片，故非常的占用带宽，我们希望晚一些加载它
+                cratePhoneBox();
+            }
+            gi++;
         },
         switchLoad: function (e) {
             console.log(e);
@@ -256,6 +276,7 @@
         //解决部分手机浏览器给的窗口高度不正常问题
         tpano.re.resizeRendererToDisplaySize($(window).width(), $(window).height());
     });
+
     //关闭开场动画
     function closeLoadAnimate() {
         $("#load-bar-x").stop();
@@ -327,7 +348,35 @@
             $('#photo-box>div').append('<div onclick="tpano.re.switchPhoto(' + (i + 1) + ')" class="photo-box-div"><img class="photo-box-img" src="' + panoPhoto[i].url + '" alt="第' + (i + 1) + '张照片"><p class="photo-box-p">' + panoPhoto[i].name + '</p></div>');
         }
     }
-    cratePhoneBox();
+
+    //隐藏功能键
+    let hidefunctionStatus = false;
+    function hidefunction() {
+        hidefunctionStatus = !hidefunctionStatus;
+        if (hidefunctionStatus) {
+            $(".item-f").animate({
+                opacity: '0'
+            });
+            setTimeout(() => {
+                $("#controller-y").animate({
+                    height: '42px'
+                }, 200);
+                $(".item-f").hide();
+            }, 400);
+        } else {
+            $("#controller-y").animate({
+                height: '128px'
+            }, 200);
+            setTimeout(() => {
+                $(".item-f").show();
+            }, 200);
+            setTimeout(() => {
+                $(".item-f").animate({
+                    opacity: '1'
+                });
+            }, 400);
+        }
+    }
 </script>
 
 </html>
