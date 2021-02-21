@@ -176,7 +176,7 @@
 <!--jquery框架，这里引入用来做一些其它的操作，TPano不依赖它，故你不需要可以不引入-->
 <script src="./jquery-2.1.4.js"></script>
 <script>
-    let msgStatus = false, gi = 0, controllerLock = false;
+    let msgStatus = false, gi = 0, controllerLock = false, photoBoxLock = false;
     let panoPhoto = [
         //全景照片数组，每项为一张照片
         {
@@ -211,11 +211,16 @@
                 setTimeout(() => {
                     hidefunction();
                 }, 6000);
+            }
 
+            gi++;
+
+            if (gi == panoPhoto.length) {
+                //全部加载完毕
                 //这个时间点开始加载相册，此功能未经后端优化的情况下加载的是原始照片，故非常的占用带宽，我们希望晚一些加载它
                 cratePhoneBox();
+                photoBoxLock = true;
             }
-            gi++;
         },
         switchLoad: function (e) {
             console.log(e);
@@ -310,7 +315,7 @@
     //切换照片功能展开按钮
     let switchPhotoStatus = false;
     function switchPhoto() {
-        if (controllerLock) {
+        if (controllerLock && photoBoxLock) {
             switchPhotoStatus = !switchPhotoStatus;
             if (switchPhotoStatus) {
                 $("#photo-box").css('display', 'flex');
@@ -338,6 +343,8 @@
                 }, 1000);
             }
             switchPhotoPoint();
+        }else{
+            alert('相册还未加载完毕，请稍后再试。');
         }
     }
     function switchPhotoPoint() {
