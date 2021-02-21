@@ -14,39 +14,383 @@
             width: 100vw;
             height: 100vh;
         }
+
+        body {
+            position: relative;
+        }
+
+        #load {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(46, 46, 46, 0.5);
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #load-bar-k {
+            width: 40%;
+            height: 1px;
+            background-color: #555555;
+        }
+
+        #load-bar-x {
+            height: 3px;
+            width: 0%;
+            background-color: #ffffff;
+        }
+
+        #controller-y {
+            position: absolute;
+            bottom: 206px;
+            right: 16px;
+            display: flex;
+            flex-direction: column;
+            background-color: rgba(20, 20, 20, 0.4);
+            border-radius: 50px;
+            padding: 2px;
+            overflow: hidden;
+            width: 42px;
+            height: 128px
+        }
+
+        .item {
+            background-color: #ffffff;
+            border-radius: 50px;
+            box-sizing: border-box;
+            width: 36px;
+            height: 36px;
+            padding: 6px;
+            margin: 3.2px;
+            position: relative;
+        }
+
+        .item>img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .point {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #00aeff;
+            border-radius: 50px;
+            right: 0;
+            bottom: -2px;
+        }
+
+        #photo-box {
+            position: absolute;
+            width: 100vw;
+            padding: 8px 10px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            box-sizing: border-box;
+            display: none;
+            opacity: 0;
+            height: 0;
+            overflow-y: hidden;
+        }
+
+        #photo-box>div {
+            background-color: rgba(20, 20, 20, 0.4);
+            border-radius: 5px;
+            display: flex;
+            overflow-x: auto;
+            padding: 12px 18px;
+            width: 100%;
+            position: relative;
+            overflow-y: hidden;
+        }
+
+        .photo-box-div {
+            margin: 0 4px;
+            position: relative;
+        }
+
+        .photo-box-img {
+            width: 200px;
+            height: 120px;
+            background-color: #ffffffcc;
+        }
+
+        .photo-box-p {
+            position: absolute;
+            left: 0px;
+            bottom: 0px;
+            text-align: center;
+            width: 200px;
+            color: #ffffff;
+            padding: 2px 0;
+            background-color: rgba(20, 20, 20, 0.4);
+            opacity: 0;
+        }
+
+        .item-s {
+            position: absolute;
+            bottom: 2px;
+        }
     </style>
 </head>
 
-<body id="pano"></body>
+<body id="pano">
+    <div id="load">
+        <div id="load-bar-k">
+            <div id="load-bar-x"></div>
+        </div>
+    </div>
+
+    <div id="controller-y">
+        <div id="photo" onclick="switchPhoto()" class="item item-f">
+            <img src="./img/bar/photo.png" alt="照片">
+            <div class="point"></div>
+        </div>
+        <div id="gyro" onclick="switchGyro()" class="item item-f">
+            <img src="./img/bar/gyro.png" alt="体感">
+            <div class="point"></div>
+        </div>
+        <div class="item item-s" onclick="hidefunction()">
+            <img src="./img/bar/function.png" alt="功能">
+        </div>
+    </div>
+
+    <div id="photo-box">
+        <div>
+            <div hidden class="photo-box-div" id="example">
+                <img class="photo-box-img" src="" alt="">
+                <p class="photo-box-p">示例</p>
+            </div>
+        </div>
+    </div>
+</body>
 <!--引入three.js-->
 <script src="./three.js"></script>
 <script src="../dist/tpano.js"></script>
+<!--设备朝向控制器，不引入无法使用体感控制-->
+<script src="./DeviceOrientationControls.js"></script>
+<!--jquery框架，这里引入用来做一些其它的操作，TPano不依赖它，故你不需要可以不引入-->
+<script src="./jquery-2.1.4.js"></script>
 <script>
-var tpano = new TPano({
-    el:'pano',//照片查看器根节点dom的id
-    photo:[
+    let msgStatus = false, gi = 0, controllerLock = false, photoBoxLock = false;
+    let panoPhoto = [
         //全景照片数组，每项为一张照片
         {
-            url:'1.jpg',
-            name:'室内'
+            url: '1.jpg',
+            name: '室内',
+            fov: {
+                pc: 62,
+                phone: 90
+            }
         },
         {
-            url:'2.jfif',
-            name:'建筑'
+            url: '2.jfif',
+            name: '建筑'
+        }, {
+            url: '3.jpg',
+            name: '外景'
         }
-    ],
-    hotspot:[
-        //全景照片上的热点
-        {
-            source:'室内',//此热点放置在哪张全景照片上
-            position:{//热点所在的位置
-                x:-495.0170165931702,
-                y:-42.218783642706285,
-                z:54.33392236397725
+    ];
+    var tpano = new TPano({
+        el: 'pano',//照片查看器根节点dom的id
+        photo: panoPhoto,
+        photoLoad: function (e) {
+            console.log(e);
+            closeLoadAnimate();
+            if (gi == 0) {
+                //第一张照片加载完毕
+
+                //解锁控制器
+                controllerLock = true;
+
+                //6秒后隐藏功能键
+                setTimeout(() => {
+                    hidefunction();
+                }, 6000);
+            }
+
+            gi++;
+
+            if (gi == panoPhoto.length) {
+                //全部加载完毕
+                //这个时间点开始加载相册，此功能未经后端优化的情况下加载的是原始照片，故非常的占用带宽，我们希望晚一些加载它
+                cratePhoneBox();
+                photoBoxLock = true;
+            }
+        },
+        switchLoad: function (e) {
+            console.log(e);
+            switch (e.status) {
+                case 'loading':
+                    loadAnimate();
+                    break;
+                case 'end':
+                    closeLoadAnimate();
+                    break;
+                default:
+                    alert('加载出错');
+                    break;
+            }
+        },
+        gyroSport: function (e) {
+            if (!e && !msgStatus) {
+                msgStatus = true;
+                alert('设备可能不支持陀螺仪,或者您没有启用https。多数浏览器安全策略只对启用了https的网站提供陀螺仪服务。');
+            }
+        },
+        hotspot: [
+            //全景照片上的热点
+            {
+                source: '室内',//此热点放置在哪张全景照片上
+                position: {//热点所在的位置
+                    x: 51.22617443281311,
+                    y: -77.47768972497656,
+                    z: -491.24706541614586
+                },
+                jumpTo: '建筑'//热点点击后跳往何方
             },
-            jumpTo:'建筑'//热点点击后跳往何方
+            {
+                source: '建筑',
+                position: {
+                    x: -38.877370809465624,
+                    y: -78.21183614810603,
+                    z: -491.8073450832495
+                },
+                jumpTo: '外景'
+            }
+        ],
+        DeviceOrientationControls: false,//设备朝向体感控制，默认关闭
+        rotateAnimateController: true,//镜头自转
+        debug: false,//调试模式
+    });
+
+    //开场加载动画
+    function loadAnimate() {
+        $("#load").show();
+        $("#load-bar-x").width('0%');
+        $("#load-bar-k").animate({
+            height: '3px',
+        }, 300);
+        $("#load-bar-x").animate({
+            width: '99%',
+        }, 15000);
+    }
+    $(document).ready(function () {
+        loadAnimate();
+        //解决部分手机浏览器给的窗口高度不正常问题
+        tpano.re.resizeRendererToDisplaySize($(window).width(), $(window).height());
+    });
+
+    //关闭开场动画
+    function closeLoadAnimate() {
+        $("#load-bar-x").stop();
+        $("#load-bar-x").animate({
+            width: '100%',
+        }, 1000);
+        setTimeout('$("#load").hide()', 1500);
+    }
+
+    //切换体感
+    let switchGyroStatus = false;
+    function switchGyro() {
+        if (controllerLock) {
+            switchGyroStatus = !switchGyroStatus;
+            tpano.re.switchGyro(switchGyroStatus);
+            switchGyroPoint();
         }
-    ]
-})
+    }
+    function switchGyroPoint() {
+        if (switchGyroStatus) {
+            $('#gyro>.point').show();
+        } else {
+            $('#gyro>.point').hide();
+        }
+    }
+    switchGyroPoint();
+
+    //切换照片功能展开按钮
+    let switchPhotoStatus = false;
+    function switchPhoto() {
+        if (controllerLock && photoBoxLock) {
+            switchPhotoStatus = !switchPhotoStatus;
+            if (switchPhotoStatus) {
+                $("#photo-box").css('display', 'flex');
+                $("#photo-box").animate({
+                    opacity: 1,
+                    height: '160px'
+                }, 800);
+                setTimeout(() => {
+                    $(".photo-box-p").animate({
+                        opacity: 1
+                    });
+                }, 800);
+            } else {
+                $(".photo-box-p").animate({
+                    opacity: 0
+                });
+                setTimeout(() => {
+                    $("#photo-box").animate({
+                        opacity: 0,
+                        height: '0'
+                    }, 800);
+                }, 200);
+                setTimeout(() => {
+                    $("#photo-box").css('display', 'none');
+                }, 1000);
+            }
+            switchPhotoPoint();
+        }else{
+            alert('相册还未加载完毕，请稍后再试。');
+        }
+    }
+    function switchPhotoPoint() {
+        if (switchPhotoStatus) {
+            $('#photo>.point').show();
+        } else {
+            $('#photo>.point').hide();
+        }
+    }
+    switchPhotoPoint();
+
+    //创建全景照片相册
+    function cratePhoneBox() {
+        for (let i = 0; i < panoPhoto.length; i++) {
+            $('#photo-box>div').append('<div onclick="tpano.re.switchPhoto(' + (i + 1) + ')" class="photo-box-div"><img class="photo-box-img" src="' + panoPhoto[i].url + '" alt="第' + (i + 1) + '张照片"><p class="photo-box-p">' + panoPhoto[i].name + '</p></div>');
+        }
+    }
+
+    //隐藏功能键
+    let hidefunctionStatus = false;
+    function hidefunction() {
+        hidefunctionStatus = !hidefunctionStatus;
+        if (hidefunctionStatus) {
+            $(".item-f").animate({
+                opacity: '0'
+            });
+            setTimeout(() => {
+                $("#controller-y").animate({
+                    height: '42px'
+                }, 200);
+                $(".item-f").hide();
+            }, 400);
+        } else {
+            $("#controller-y").animate({
+                height: '128px'
+            }, 200);
+            setTimeout(() => {
+                $(".item-f").show();
+            }, 200);
+            setTimeout(() => {
+                $(".item-f").animate({
+                    opacity: '1'
+                });
+            }, 400);
+        }
+    }
 </script>
+
 </html>
