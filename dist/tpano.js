@@ -32,9 +32,6 @@ function TPano(d) {
     let mesh = new THREE.Mesh(geometry);
     scene.add(mesh);
     var texture = Array();
-    var geometry2;
-    var material2;
-    var mesh2;
     let loadTextureLoaderCount = 0;
     loadTextureLoader(loadTextureLoaderCount);
     //用来加载全景照片
@@ -165,6 +162,8 @@ function TPano(d) {
     }
 
     //生成热点
+    let hotspotAnimate_count = 1;
+    let hotspotAnimate_temp = Array();
     function initHotspot() {
         for (let j = 0; j < d.hotspot.length; j++) {
             if (mesh.material.map.panoName == d.hotspot[j].source) {
@@ -173,7 +172,7 @@ function TPano(d) {
 
                 let sprite = new THREE.Sprite(material);
                 sprite.position.set(d.hotspot[j].position.x * 0.9, d.hotspot[j].position.y * 0.9, d.hotspot[j].position.z * 0.9);
-                sprite.scale.set(30, 30,1);
+                sprite.scale.set(30, 30, 1);
                 for (let k = 0; k < d.photo.length; k++) {
                     if (d.photo[k].name == d.hotspot[j].jumpTo) {
                         sprite.jumpTo = k;
@@ -181,6 +180,12 @@ function TPano(d) {
                 }
                 sprite.name = 'hotspot';
                 scene.add(sprite);
+            }
+        }
+
+        for (let i = 0; i < scene.children.length; i++) {
+            if (scene.children[i].name == 'hotspot') {
+                hotspotAnimate_temp[i] = scene.children[i].position.y;
             }
         }
     }
@@ -206,6 +211,26 @@ function TPano(d) {
     //动画绑定
     function animate() {
         requestAnimationFrame(animate);
+
+        //热点摆动
+        for (let i = 0; i < scene.children.length; i++) {
+            if (scene.children[i].name == 'hotspot') {
+
+                if (hotspotAnimate_count >= 400) {
+                    hotspotAnimate_count = 1;
+                    scene.children[i].position.y = hotspotAnimate_temp[i];
+                }
+
+                if (hotspotAnimate_count <= 200) {
+                    scene.children[i].position.y = scene.children[i].position.y + 0.04;
+                } else {
+                    scene.children[i].position.y = scene.children[i].position.y - 0.04;
+                }
+
+                hotspotAnimate_count++;
+            }
+        }
+
         render();
     }
     animate();
