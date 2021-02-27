@@ -112,6 +112,7 @@ var tpano = new TPano({
                 y:-42.218783642706285,
                 z:54.33392236397725
             },
+            imgUrl: './img/outdoor.gif',
             jumpTo:'建筑'//热点点击后跳往何方
         },
         {
@@ -121,6 +122,7 @@ var tpano = new TPano({
                 y:-42.218783642706285,
                 z:54.33392236397725
             },
+            imgUrl: './img/foot.png',
             jumpTo:'外景'
         }
     ],
