@@ -65,7 +65,16 @@ var tpano = new TPano({
 
 ## 开发进度
 
-未开发完，持续开发中，趁过年先发布一下
+第一个版本已发布
+
+v1.0.0
+
+第一个版本✨
+上线🎉🎉🎉
+
+https://gitee.com/push_0x57df/TPano/releases/1.00
+
+项目继续优化中，有建议请留言
 
 ## 开发文档
 

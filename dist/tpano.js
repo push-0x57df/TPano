@@ -32,9 +32,6 @@ function TPano(d) {
     let mesh = new THREE.Mesh(geometry);
     scene.add(mesh);
     var texture = Array();
-    var geometry2;
-    var material2;
-    var mesh2;
     let loadTextureLoaderCount = 0;
     loadTextureLoader(loadTextureLoaderCount);
     //用来加载全景照片
@@ -165,20 +162,30 @@ function TPano(d) {
     }
 
     //生成热点
+    let hotspotAnimate_count = 1;
+    let hotspotAnimate_temp = Array();
     function initHotspot() {
         for (let j = 0; j < d.hotspot.length; j++) {
             if (mesh.material.map.panoName == d.hotspot[j].source) {
-                geometry2 = new THREE.SphereBufferGeometry(20, 60, 40);
-                material2 = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-                mesh2 = new THREE.Mesh(geometry2, material2);
-                mesh2.position.set(d.hotspot[j].position.x, d.hotspot[j].position.y, d.hotspot[j].position.z);
+                let map = new THREE.TextureLoader().load(d.hotspot[j].imgUrl);
+                let material = new THREE.SpriteMaterial({ map: map });
+
+                let sprite = new THREE.Sprite(material);
+                sprite.position.set(d.hotspot[j].position.x * 0.9, d.hotspot[j].position.y * 0.9, d.hotspot[j].position.z * 0.9);
+                sprite.scale.set(30, 30, 1);
                 for (let k = 0; k < d.photo.length; k++) {
                     if (d.photo[k].name == d.hotspot[j].jumpTo) {
-                        mesh2.jumpTo = k;
+                        sprite.jumpTo = k;
                     }
                 }
-                mesh2.name = 'hotspot';
-                scene.add(mesh2);
+                sprite.name = 'hotspot';
+                scene.add(sprite);
+            }
+        }
+
+        for (let i = 0; i < scene.children.length; i++) {
+            if (scene.children[i].name == 'hotspot') {
+                hotspotAnimate_temp[i] = scene.children[i].position.y;
             }
         }
     }
@@ -204,6 +211,26 @@ function TPano(d) {
     //动画绑定
     function animate() {
         requestAnimationFrame(animate);
+
+        //热点摆动
+        for (let i = 0; i < scene.children.length; i++) {
+            if (scene.children[i].name == 'hotspot') {
+
+                if (hotspotAnimate_count >= 400) {
+                    hotspotAnimate_count = 1;
+                    scene.children[i].position.y = hotspotAnimate_temp[i];
+                }
+
+                if (hotspotAnimate_count <= 200) {
+                    scene.children[i].position.y = scene.children[i].position.y + 0.04;
+                } else {
+                    scene.children[i].position.y = scene.children[i].position.y - 0.04;
+                }
+
+                hotspotAnimate_count++;
+            }
+        }
+
         render();
     }
     animate();
@@ -397,7 +424,7 @@ function TPano(d) {
             if (camera.rotation._x == -1.5707963267948966 && camera.rotation._y == 0 && camera.rotation._z == 0) {
                 //当相机对准这个坐标表示很可能设备不支持陀螺仪
                 d.gyroSport(false);
-            }else{
+            } else {
                 d.gyroSport(true);
             }
             devicecontrol.update();
