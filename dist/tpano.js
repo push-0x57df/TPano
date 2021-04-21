@@ -4,6 +4,11 @@ function TPano(d) {
     var width = el.clientWidth;
     var height = el.clientHeight;
 
+    //参数处理
+    if (d.DeviceOrientationControls == null) {
+        d.DeviceOrientationControls = false;
+    }
+
     //初始化场景、相机、渲染器
     const scene = new THREE.Scene();
     let fov;
@@ -67,7 +72,9 @@ function TPano(d) {
             },
             'Leftover': d.photo.length - i - 1
         };
-        d.photoLoad(loadTextureMsg);
+        if (d.photoLoad != null) {
+            d.photoLoad(loadTextureMsg);
+        }
         if (loadTextureLoaderCount == 0) {
             //初始化加载第一张图片
             switchPhotoN(0);
@@ -92,23 +99,27 @@ function TPano(d) {
             //回调通知：注意全景图片换页事件开始，应该检查全景图片是否下载完毕，主要是用于做进度提示功能
             if (loadTextureMsg.all - loadTextureMsg.Leftover >= i + 1) {
                 //已加载完成，无需等待
-                d.switchLoad({
-                    loading: {
-                        id: i + 1,
-                        name: d.photo[i].name
-                    },
-                    status: 'end'
-                });
+                if (d.switchLoad != null) {
+                    d.switchLoad({
+                        loading: {
+                            id: i + 1,
+                            name: d.photo[i].name
+                        },
+                        status: 'end'
+                    });
+                }
                 switchGo();
             } else {
                 //未加载完成，请等待一秒后再尝试
-                d.switchLoad({
-                    loading: {
-                        id: i + 1,
-                        name: d.photo[i].name
-                    },
-                    status: 'loading'
-                });
+                if (d.switchLoad != null) {
+                    d.switchLoad({
+                        loading: {
+                            id: i + 1,
+                            name: d.photo[i].name
+                        },
+                        status: 'loading'
+                    });
+                }
                 setTimeout(switchPhotoN, 1000, i);
             }
 
@@ -147,7 +158,9 @@ function TPano(d) {
                 material = new THREE.MeshBasicMaterial({ map: texture[i] });
                 mesh.material = material;
                 cleanHotspot();
-                initHotspot();
+                if (d.hotspot != null) {
+                    initHotspot();
+                }
                 response = {
                     status: 'OK',
                     msg: '切换成功'
@@ -201,7 +214,9 @@ function TPano(d) {
     }
 
     //体感控制
-    let devicecontrol = new THREE.DeviceOrientationControls(camera);
+    if (d.DeviceOrientationControls == true) {
+        let devicecontrol = new THREE.DeviceOrientationControls(camera);
+    }
 
     //启动鼠标控制
     mouseController();
