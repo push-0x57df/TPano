@@ -8,6 +8,9 @@ function TPano(d) {
     if (d.DeviceOrientationControls == null) {
         d.DeviceOrientationControls = false;
     }
+    if (d.MouseController == null) {
+        d.MouseController = true;
+    }
 
     //初始化场景、相机、渲染器
     const scene = new THREE.Scene();
@@ -218,10 +221,12 @@ function TPano(d) {
         let devicecontrol = new THREE.DeviceOrientationControls(camera);
     }
 
-    //启动鼠标控制
-    mouseController();
-    //启动多点触控
-    phoneController();
+    if (d.MouseController) {
+        //启动鼠标控制
+        mouseController();
+        //启动多点触控
+        phoneController();
+    }
 
     //动画绑定
     function animate() {
@@ -266,9 +271,12 @@ function TPano(d) {
         }
     }
     setInterval(rotateAnimate, 1000 / 60);//60帧
-    el.addEventListener('pointerdown', function () {
-        rotateAnimateController = false;
-    });
+
+    if(d.MouseController){
+        el.addEventListener('pointerdown', function () {
+            rotateAnimateController = false;
+        });
+    }
 
     //手机端多点触控
     let mouseFovControllerSport = true;//用来开闭鼠标控制支持的，如果用户在进行放大手势，应该将鼠标视角控制锁定
