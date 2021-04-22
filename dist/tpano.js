@@ -4,6 +4,14 @@ function TPano(d) {
     var width = el.clientWidth;
     var height = el.clientHeight;
 
+    //参数处理
+    if (d.DeviceOrientationControls == null) {
+        d.DeviceOrientationControls = false;
+    }
+    if (d.MouseController == null) {
+        d.MouseController = true;
+    }
+
     //初始化场景、相机、渲染器
     const scene = new THREE.Scene();
     let fov;
@@ -67,7 +75,9 @@ function TPano(d) {
             },
             'Leftover': d.photo.length - i - 1
         };
-        d.photoLoad(loadTextureMsg);
+        if (d.photoLoad != null) {
+            d.photoLoad(loadTextureMsg);
+        }
         if (loadTextureLoaderCount == 0) {
             //初始化加载第一张图片
             switchPhotoN(0);
@@ -92,23 +102,27 @@ function TPano(d) {
             //回调通知：注意全景图片换页事件开始，应该检查全景图片是否下载完毕，主要是用于做进度提示功能
             if (loadTextureMsg.all - loadTextureMsg.Leftover >= i + 1) {
                 //已加载完成，无需等待
-                d.switchLoad({
-                    loading: {
-                        id: i + 1,
-                        name: d.photo[i].name
-                    },
-                    status: 'end'
-                });
+                if (d.switchLoad != null) {
+                    d.switchLoad({
+                        loading: {
+                            id: i + 1,
+                            name: d.photo[i].name
+                        },
+                        status: 'end'
+                    });
+                }
                 switchGo();
             } else {
                 //未加载完成，请等待一秒后再尝试
-                d.switchLoad({
-                    loading: {
-                        id: i + 1,
-                        name: d.photo[i].name
-                    },
-                    status: 'loading'
-                });
+                if (d.switchLoad != null) {
+                    d.switchLoad({
+                        loading: {
+                            id: i + 1,
+                            name: d.photo[i].name
+                        },
+                        status: 'loading'
+                    });
+                }
                 setTimeout(switchPhotoN, 1000, i);
             }
 
@@ -147,7 +161,9 @@ function TPano(d) {
                 material = new THREE.MeshBasicMaterial({ map: texture[i] });
                 mesh.material = material;
                 cleanHotspot();
-                initHotspot();
+                if (d.hotspot != null) {
+                    initHotspot();
+                }
                 response = {
                     status: 'OK',
                     msg: '切换成功'
@@ -201,7 +217,9 @@ function TPano(d) {
     }
 
     //体感控制
-    let devicecontrol = new THREE.DeviceOrientationControls(camera);
+    if (d.DeviceOrientationControls == true) {
+        let devicecontrol = new THREE.DeviceOrientationControls(camera);
+    }
 
     //启动鼠标控制
     mouseController();
@@ -251,8 +269,11 @@ function TPano(d) {
         }
     }
     setInterval(rotateAnimate, 1000 / 60);//60帧
+
     el.addEventListener('pointerdown', function () {
-        rotateAnimateController = false;
+        if (d.MouseController) {
+            rotateAnimateController = false;
+        }
     });
 
     //手机端多点触控
@@ -297,6 +318,7 @@ function TPano(d) {
 
     //封装鼠标控制
     function mouseController() {
+        
         //初始化鼠标控制用变量
         let isUserInteracting = false,
             onPointerDownMouseX = 0, onPointerDownMouseY = 0,
@@ -308,6 +330,9 @@ function TPano(d) {
         const raycaster = new THREE.Raycaster();
         const mouse = new THREE.Vector2();
         function onMouseMove(event) {
+            if (!d.MouseController) {
+                return;
+            }
             // 将鼠标位置归一化为设备坐标。x 和 y 方向的取值范围是 (-1 to +1)
             mouse.x = (event.clientX / el.clientWidth) * 2 - 1;
             mouse.y = - (event.clientY / el.clientHeight) * 2 + 1;
@@ -317,10 +342,16 @@ function TPano(d) {
         //鼠标按下到松开期间有没有移动，如果没有移动说明点击的是热点，否则是移动视角
         let clientX, clientY;
         el.addEventListener('pointerdown', function (event) {
+            if (!d.MouseController) {
+                return;
+            }
             clientX = event.clientX;
             clientY = event.clientY;
         });
         el.addEventListener('pointerup', function (event) {
+            if (!d.MouseController) {
+                return;
+            }
             var distance = Math.sqrt(Math.pow(Math.abs(event.clientX - clientX), 2) + Math.pow(Math.abs(event.clientY - clientY), 2));//鼠标按下到松开期间移动距离
             if (distance <= 10) {
                 //这是个容差设计，在手机端如果不给差值，很可能用户的点击和松开之间会有误差
@@ -350,6 +381,9 @@ function TPano(d) {
         el.addEventListener('pointerdown', onPointerDown);
         document.addEventListener('wheel', onDocumentMouseWheel);
         function onPointerDown(event) {
+            if (!d.MouseController) {
+                return;
+            }
             //计算摄像机目前视角状态，保持当前状态，在当前状态上附加变化
             //console.log(camera);
             lon = -1 * THREE.MathUtils.radToDeg(camera.rotation.y) - 90;//经度
@@ -370,6 +404,9 @@ function TPano(d) {
         }
 
         function onPointerMove(event) {
+            if (!d.MouseController) {
+                return;
+            }
             if (event.isPrimary === false) return;
             let rate;//触控灵敏度
             //想写个函数来线性计算这里的灵敏度，暂时没找到合适的函数
@@ -388,6 +425,9 @@ function TPano(d) {
         }
 
         function onPointerUp() {
+            if (!d.MouseController) {
+                return;
+            }
             if (event.isPrimary === false) return;
             isUserInteracting = false;
             document.removeEventListener('pointermove', onPointerMove);
@@ -395,6 +435,9 @@ function TPano(d) {
         }
 
         function onDocumentMouseWheel(event) {
+            if (!d.MouseController) {
+                return;
+            }
             const fov = camera.fov + event.deltaY * 0.05;
             camera.fov = THREE.MathUtils.clamp(fov, 10, 75);
             camera.updateProjectionMatrix();
@@ -462,6 +505,14 @@ function TPano(d) {
          */
         switchGyro: function switchGyro(e) {
             d.DeviceOrientationControls = e;
+        },
+
+        /**
+         * 切换鼠标控制
+         * @param bool e 鼠标控制开关
+         */
+        seitchMouseController: function seitchMouseController(e) {
+            d.MouseController = e;
         }
     }
 }

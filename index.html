@@ -2,59 +2,195 @@
 <html>
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta charset="UTF-8">
+    <title>TPano 全景照片引擎</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TPano 全景照片框架</title>
-    <style>
-        *{
-            margin: 0;
-        }
-
-        #page{
-            display: flex;
-            justify-content: center;
-            flex-direction: column;
-            align-items: center;
-            width: 100vw;
-            height: 100vh;
-        }
-
-        h1{
-            margin-bottom: 20px;
-            font-size: 80px;
-        }
-
-        h2{
-            margin-bottom: 40px;
-            font-size: 40px;
-        }
-
-        #link{
-            margin-bottom: 10px;
-        }
-
-        #link>a{
-            font-size: 20px;
-            margin: 0 10px;
-        }
-
-        
-    </style>
+    <title>Document</title>
+    <link rel="stylesheet" href="./index.css">
 </head>
 
 <body>
-    <div id="page">
-        <h1>TPano 全景照片框架</h1>
-        <h2>基于Three.js构建</h2>
-        <div id="link">
-            <a href="./example/index.html">查看演示</a>
-            <a href="https://gitee.com/push_0x57df/TPano/blob/develop/docs/doc.md">查看教程</a>
-        </div>
+    <header>
         <div>
-            <a href='https://gitee.com/push_0x57df/TPano/stargazers'><img src='https://gitee.com/push_0x57df/TPano/badge/star.svg?theme=dark' alt='star'></img></a>
-            <a href='https://gitee.com/push_0x57df/TPano/members'><img src='https://gitee.com/push_0x57df/TPano/badge/fork.svg?theme=dark' alt='fork'></img></a>
+            <nav>
+                <img src="./example/img/tpano.png" alt="logo">
+                <p>TPano</p>
+            </nav>
+            <nav>
+                <li><a href="https://gitee.com/push_0x57df/TPano">开源</a></li>
+                <li><a href="https://gitee.com/push_0x57df/TPano/blob/develop/docs/doc.md">文档</a></li>
+                <li><a href="https://gitee.com/push_0x57df">作者</a></li>
+            </nav>
         </div>
-    </div>
+    </header>
+    <main>
+        <div id="pano"></div>
+        <div class="main">
+            <div class="mian-content">
+                <img src="./example/img/Tpano-logo.png" alt="tpano logo">
+                <div>
+                    <h1>TPano</h1>
+                    <h2>一个便于WEB前端集成的全景照片展示引擎。</h2>
+                    <a href="#page-1"><button>了解更多</button></a>&emsp;
+                    <a href="https://push_0x57df.gitee.io/tpano/example"><button>立即体验</button></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="page-0"></div>
+
+        <div class="page" id="page-1">
+            <div>
+                <div class="page-head">
+                    <h1>项目简介 / Introduce</h1>
+                </div>
+
+                <div class="introduce">
+                    <div class="introduce-img-group">
+                        <div class="introduce-img">
+                            <img src="./example/2.jfif" alt="球面展开全景图">
+                            <p>相机输出的球面展开全景图</p>
+                        </div>
+                        <div class="introduce-img">
+                            <tpano id="pano-1" src="./example/2.jfif" alt="球面展开全景图"></tpano>
+                            <p>使用 TPano 加载的全景场景</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="page-2">
+            <div>
+                <div class="page-head">
+                    <h1>特征 / Features</h1>
+                </div>
+
+                <div class="features-card-group">
+                    <div class="features-card">
+                        <img src="./example/img/source.png" alt="特征一">
+                        <p class="features-title">开源</p>
+                        <p>本项目开源在 Gitee，使用 MIT 开源协议，可免授权商用、修改。同时欢迎 <a class="links"
+                                href="https://gitee.com/push_0x57df/TPano">加入开源仓库</a> 一起让它变得更加完善。</p>
+                    </div>
+
+                    <div class="features-card">
+                        <img src="./example/img/simple.png" alt="特征二">
+                        <p class="features-title">易用</p>
+                        <p>项目尽可能的对复杂的 3D 场景构建工作进行了底层屏蔽，使用了面向对象化的编程理念来简化了集成应用难度。通过 <a class="links"
+                                href="https://gitee.com/push_0x57df/TPano">阅读文档</a> 了解如何使用。</p>
+                    </div>
+
+                    <div class="features-card">
+                        <img src="./example/img/controller.png" alt="特征三">
+                        <p class="features-title">可控</p>
+                        <p>生成的全景场景可以接受鼠标交互，也支持移动端触屏交互和方向传感器控制，通过 <a class="links"
+                                href="https://push_0x57df.gitee.io/tpano/example">Demo</a> 体验一下。</p>
+                    </div>
+
+                    <div class="features-card">
+                        <img src="./example/img/adaptation.png" alt="特征四">
+                        <p class="features-title">适配</p>
+                        <p>依附于 WEB 天生的跨平台能力，本项目也能做到跨平台，并且对于屏幕尺寸适配和控制给出了丰富的 API。</p>
+                    </div>
+                </div>
+
+                <p class="features-describe">基于众多的特征支持下，开发人员不必在意全景照片显示器内部需要使用何种技术实现 3D
+                    渲染和模型控制，就可以很轻松的将全景照片功能集成到自己的项目中，在全景照片技术逐渐广泛应用的当下，我们也觉得需要有一种方式可以很快速的实现在 WEB
+                    网页上显示全景照片，本项目就是基于这样的目的立项开发，并将保持开源免费。</p>
+
+            </div>
+        </div>
+
+        <div class="page" id="page-3">
+            <div>
+                <div class="page-head">
+                    <h1>接入方式 / Install</h1>
+                </div>
+
+                <div class="install">
+                    <div class="install-card">
+                        <h2>标准接入</h2>
+                        <img src="./example/img/install-std.png" alt="标准接入">
+                        <p>使用标准接入可以调用 TPano 的全部接口能力，更为强大</p>
+                    </div>
+                    <div class="install-card">
+                        <h2>快速接入</h2>
+                        <img src="./example/img/install-fast.png" alt="快速接入">
+                        <p>使用标快速接入可以实现零配置低代码接入，全自动加载，就像使用 img 标签一样简单</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="page" id="page-4">
+            <div>
+                <div class="page-head">
+                    <h1>获取 / Get</h1>
+                </div>
+
+                <div class="get">
+                    <h2>请在 Gitee 上获取，如有帮助，请给个 start</h2>
+                    <script src='https://gitee.com/push_0x57df/TPano/widget_preview' async defer></script>
+                    <div id="osc-gitee-widget-tag"></div>
+                    <style>
+                        .osc_pro_color {
+                            color: #4183c4 !important;
+                        }
+
+                        .osc_panel_color {
+                            background-color: #ffffff !important;
+                        }
+
+                        .osc_background_color {
+                            background-color: #ffffff !important;
+                        }
+
+                        .osc_border_color {
+                            border-color: #e3e9ed !important;
+                        }
+
+                        .osc_desc_color {
+                            color: #666666 !important;
+                        }
+
+                        .osc_link_color * {
+                            color: #9b9b9b !important;
+                        }
+                    </style>
+                </div>
+
+            </div>
+        </div>
+
+        <footer>
+            <p>Copyright © 2021 入栈 Powered by TPano on Three</p>
+        </footer>
+    </main>
+    
 </body>
+
+<!--引入three.js-->
+<script src="./example/three.js"></script>
+<script src="./dist/tpano.js"></script>
+<!--jquery框架，这里引入用来做一些其它的操作，TPano不依赖它，故你不需要可以不引入-->
+<script src="./example/jquery-2.1.4.js"></script>
+<script src="./dist/fastloading.js"></script>
+<script>
+    var tpano = new TPano({
+        el: 'pano',//照片查看器根节点dom的id
+        photo: [
+            //全景照片数组，每项为一张照片
+            {
+                url: './example/1.jpg',
+                name: '室内'
+            }
+        ],
+        rotateAnimateController: true,//镜头自转
+        MouseController: false
+    });
+
+</script>
 
 </html>
