@@ -38,47 +38,79 @@ var tpano = new TPano({
 
 ## 添加第一张照片
 
-``` html
-<!DOCTYPE html>
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TPano 全景照片查看器</title>
-    <style>
-        * {
-            margin: 0;
-        }
+- 使用标准接入
 
-        #pano {
-            width: 100vw;
-            height: 100vh;
-        }
-    </style>
-</head>
+  ``` html
+  <!DOCTYPE html>
+  <html>
+  <head>
+      <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>TPano 全景照片查看器</title>
+      <style>
+          * {
+              margin: 0;
+          }
+  
+          #pano {
+              width: 100vw;
+              height: 100vh;
+          }
+      </style>
+  </head>
+  
+  <body id="pano"></body>
+  <!--引入three.js-->
+  <script src="./three.js"></script>
+  <script src="../dist/tpano.js"></script>
+  <!--设备朝向控制器，不引入无法使用体感控制-->
+  <script src="./DeviceOrientationControls.js"></script>
+  <script>
+  var tpano = new TPano({
+      el:'pano',//照片查看器根节点dom的id
+      photo:[
+          //全景照片数组，每项为一张照片
+          {
+              url:'1.jpg',
+              name:'室内'
+          }
+      ]
+  })
+  </script>
+  </html>
+  ```
 
-<body id="pano"></body>
-<!--引入three.js-->
-<script src="./three.js"></script>
-<script src="../dist/tpano.js"></script>
-<!--设备朝向控制器，不引入无法使用体感控制-->
-<script src="./DeviceOrientationControls.js"></script>
-<script>
-var tpano = new TPano({
-    el:'pano',//照片查看器根节点dom的id
-    photo:[
-        //全景照片数组，每项为一张照片
-        {
-            url:'1.jpg',
-            name:'室内'
-        }
-    ]
-})
-</script>
-</html>
-```
+  就像这样，添加一张文件名为1.jpg的全景照片进入场景，其中的关键就是在创建TPano实例的时候设置photo，需要注意的是这是一个数组，你可以创建多个照片项目
 
-就像这样，添加一张文件名为1.jpg的全景照片进入场景，其中的关键就是在创建TPano实例的时候设置photo，需要注意的是这是一个数组，你可以创建多个照片项目
+- 使用快速接入
+
+  
+
+  ``` html
+  <!DOCTYPE html>
+  <html>
+  <head>
+      <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>TPano 全景照片查看器</title>
+  </head>
+  
+  <body id="pano">
+  	<tpano id="pano-1" src="./example/2.jfif" alt="球面展开全景图"></tpano>    
+  </body>
+  <!--引入three.js-->
+  <script src="./three.js"></script>
+  <script src="../dist/tpano.js"></script>
+  <!--引入快速加载部件-->
+  <script src="./dist/fastloading.js"></script>
+  </html>
+  ```
+
+  注意几个问题：
+
+  1. 使用这种方式需要引入 /dist/tpano.js 部件
+  2. 使用 tpano 标签完成引入，图片链接放在 src 属性，同时一定要给定唯一的 id 属性
+  3. 使用这种方式，无法使用 tpano 提供的丰富的函数接口
 
 ## 添加热点
 
