@@ -1,0 +1,304 @@
+* {
+    margin: 0;
+}
+
+html {
+    -ms-overflow-style: none;
+    overflow: -moz-scrollbars-none;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 2px 2px rgb(0 0 0 / 10%);
+    background-color: #ffffff;
+}
+
+header>div {
+    display: flex;
+    justify-content: space-between;
+    width: 1300px;
+    height: 56px;
+}
+
+header nav {
+    display: flex;
+    align-items: center;
+}
+
+header img {
+    height: 30px;
+    width: 30px;
+}
+
+header p {
+    font-size: 20px;
+    margin-left: 8px;
+}
+
+a {
+    text-decoration: none;
+    color: rgb(34, 34, 34);
+    font-size: 14px;
+}
+
+li {
+    list-style: none;
+    margin-left: 40px;
+}
+
+li:hover {
+    text-decoration: underline;
+}
+
+main {
+    height: calc(100vh - 56px);
+    position: relative;
+}
+
+#pano {
+    position: absolute;
+    width: 100vw;
+    height: calc(100vh - 36px);
+    filter: blur(2px);
+    overflow: hidden;
+    top: -20px;
+    z-index: -1;
+    background-color: black;
+}
+
+.main {
+    position: absolute;
+    width: 100vw;
+    height: calc(100vh - 56px);
+    top: 0;
+    left: 0;
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mian-content {
+    display: flex;
+    justify-content: center;
+}
+
+.mian-content img {
+    width: 200px;
+    height: 200px;
+}
+
+.mian-content>div {
+    margin-left: 40px;
+}
+
+.mian-content>div * {
+    margin: 10px 0;
+    color: #ffffff;
+}
+
+.mian-content>div h1 {
+    font-size: 60px;
+}
+
+.mian-content>div button {
+    background-color: rgba(255, 0, 0, 0);
+    border: 4px solid #ffffff;
+    border-radius: 5px;
+    font-size: 24px;
+    padding: 4px 20px;
+    cursor: pointer;
+}
+
+.mian-content>div button:hover {
+    background-color: #ffffff;
+    color: rgba(0, 0, 0);
+}
+
+.mian-content>div button:focus {
+    outline: none;
+}
+
+.page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    background-color: #f6f6f6;
+}
+
+#page-0 {
+    background-color: rgba(255, 0, 0, 0);
+}
+
+.page>div {
+    width: 1300px;
+}
+
+.links {
+    color: rgb(0, 132, 255);
+}
+
+.page-head {
+    margin: 60px 0 40px 0;
+    text-align: center;
+    padding: 10px;
+    background-color: #ffffff;
+    border-radius: 10px;
+}
+
+.page-head>h1 {
+    font-weight: lighter;
+}
+
+.features-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 6px;
+    padding: 20px;
+    width: 23%;
+    box-sizing: border-box;
+    height: 360px;
+    background-color: #ffffff;
+}
+
+.features-card img {
+    width: 140px;
+    height: 140px;
+    margin: 20px 30px 30px 30px;
+}
+
+.features-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.features-card-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+.features-describe {
+    font-size: 18px;
+    margin-top: 30px;
+    font-weight: lighter;
+}
+
+.introduce-img-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+.introduce-img {
+    width: 48%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.introduce-img>img, .introduce-img>tpano {
+    width: 100%;
+    height: 400px;
+}
+
+.introduce-img>p {
+    margin-top: 18px;
+}
+
+.get {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#osc-gitee-widget-tag {
+    width: 60%;
+    margin-top: 30px;
+}
+
+footer {
+    height: 34px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(66, 66, 66);
+    font-weight: lighter;
+    font-size: 14px;
+}
+
+#page-4 {
+    height: calc(100vh - 34px);
+}
+
+.install {
+    display: flex;
+    justify-content: space-between;
+}
+
+.install-card {
+    width: 48%;
+    text-align: center;
+}
+
+.install-card h2 {
+    font-size: 30px;
+    margin-top: 10px;
+}
+
+.install-card img {
+    width: 100%;
+    margin: 10px 0;
+}
+
+@media screen and (max-width: 1300px) {
+    .mian-content {
+        flex-direction: column;
+        align-items: center;
+        padding: 0 4%;
+    }
+    .mian-content>div {
+        text-align: center;
+        margin-left: 0;
+    }
+    header{
+        padding: 0 4%;
+    }
+    .page{
+        padding: 0 4%;
+    }
+    .introduce-img-group{
+        flex-direction: column;
+    }
+    .introduce-img {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .introduce-img>img, .introduce-img>tpano {
+        width: 100%;
+        height: 220px;
+    }
+    .features-card-group{
+        flex-direction: column;
+        justify-content: none;
+    }
+    .features-card{
+        width: auto;
+        margin-bottom: 14px;
+    }
+    .install{
+        flex-direction: column;
+    }
+    .install-card {
+        width: auto;
+    }
+    #page-4{
+        display: none;
+    }
+}
