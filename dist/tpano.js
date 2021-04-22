@@ -221,12 +221,10 @@ function TPano(d) {
         let devicecontrol = new THREE.DeviceOrientationControls(camera);
     }
 
-    if (d.MouseController) {
-        //启动鼠标控制
-        mouseController();
-        //启动多点触控
-        phoneController();
-    }
+    //启动鼠标控制
+    mouseController();
+    //启动多点触控
+    phoneController();
 
     //动画绑定
     function animate() {
@@ -272,11 +270,11 @@ function TPano(d) {
     }
     setInterval(rotateAnimate, 1000 / 60);//60帧
 
-    if(d.MouseController){
-        el.addEventListener('pointerdown', function () {
+    el.addEventListener('pointerdown', function () {
+        if (d.MouseController) {
             rotateAnimateController = false;
-        });
-    }
+        }
+    });
 
     //手机端多点触控
     let mouseFovControllerSport = true;//用来开闭鼠标控制支持的，如果用户在进行放大手势，应该将鼠标视角控制锁定
@@ -320,6 +318,7 @@ function TPano(d) {
 
     //封装鼠标控制
     function mouseController() {
+        
         //初始化鼠标控制用变量
         let isUserInteracting = false,
             onPointerDownMouseX = 0, onPointerDownMouseY = 0,
@@ -331,6 +330,9 @@ function TPano(d) {
         const raycaster = new THREE.Raycaster();
         const mouse = new THREE.Vector2();
         function onMouseMove(event) {
+            if (!d.MouseController) {
+                return;
+            }
             // 将鼠标位置归一化为设备坐标。x 和 y 方向的取值范围是 (-1 to +1)
             mouse.x = (event.clientX / el.clientWidth) * 2 - 1;
             mouse.y = - (event.clientY / el.clientHeight) * 2 + 1;
@@ -340,10 +342,16 @@ function TPano(d) {
         //鼠标按下到松开期间有没有移动，如果没有移动说明点击的是热点，否则是移动视角
         let clientX, clientY;
         el.addEventListener('pointerdown', function (event) {
+            if (!d.MouseController) {
+                return;
+            }
             clientX = event.clientX;
             clientY = event.clientY;
         });
         el.addEventListener('pointerup', function (event) {
+            if (!d.MouseController) {
+                return;
+            }
             var distance = Math.sqrt(Math.pow(Math.abs(event.clientX - clientX), 2) + Math.pow(Math.abs(event.clientY - clientY), 2));//鼠标按下到松开期间移动距离
             if (distance <= 10) {
                 //这是个容差设计，在手机端如果不给差值，很可能用户的点击和松开之间会有误差
@@ -373,6 +381,9 @@ function TPano(d) {
         el.addEventListener('pointerdown', onPointerDown);
         document.addEventListener('wheel', onDocumentMouseWheel);
         function onPointerDown(event) {
+            if (!d.MouseController) {
+                return;
+            }
             //计算摄像机目前视角状态，保持当前状态，在当前状态上附加变化
             //console.log(camera);
             lon = -1 * THREE.MathUtils.radToDeg(camera.rotation.y) - 90;//经度
@@ -393,6 +404,9 @@ function TPano(d) {
         }
 
         function onPointerMove(event) {
+            if (!d.MouseController) {
+                return;
+            }
             if (event.isPrimary === false) return;
             let rate;//触控灵敏度
             //想写个函数来线性计算这里的灵敏度，暂时没找到合适的函数
@@ -411,6 +425,9 @@ function TPano(d) {
         }
 
         function onPointerUp() {
+            if (!d.MouseController) {
+                return;
+            }
             if (event.isPrimary === false) return;
             isUserInteracting = false;
             document.removeEventListener('pointermove', onPointerMove);
@@ -418,6 +435,9 @@ function TPano(d) {
         }
 
         function onDocumentMouseWheel(event) {
+            if (!d.MouseController) {
+                return;
+            }
             const fov = camera.fov + event.deltaY * 0.05;
             camera.fov = THREE.MathUtils.clamp(fov, 10, 75);
             camera.updateProjectionMatrix();
@@ -485,6 +505,14 @@ function TPano(d) {
          */
         switchGyro: function switchGyro(e) {
             d.DeviceOrientationControls = e;
+        },
+
+        /**
+         * 切换鼠标控制
+         * @param bool e 鼠标控制开关
+         */
+        seitchMouseController: function seitchMouseController(e) {
+            d.MouseController = e;
         }
     }
 }

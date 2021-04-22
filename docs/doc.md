@@ -145,6 +145,14 @@ var tpano = new TPano({
 })
 ```
 
+如果您想在代码里随意的打开或关闭通用鼠标或触控，则需要使用函数接口来实现，像这样：
+
+```javascript
+tpano.re.seitchMouseController(false);
+```
+
+注意这里的tpano是TPano的实例变量，参数true和false则标注了是打开还是关闭通用鼠标或触控控制
+
 ## 设备朝向体感控制
 
 使用DeviceOrientationControls设置是否加载完毕后自动使用体感控制，请设置bool值，就像这样：
