@@ -36,3 +36,22 @@ window.document.body.onmouseover = function (event) {
     }
 }
 
+window.document.body.touchstart = function (event) {
+    el = event.target;
+    if (el.tagName == "CANVAS") {
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
+
+        console.log(tpanoAutoLoad);
+        for (let i = 0; i < tpanoAutoLoad.length; i++) {
+            tpanoAutoLoad[i].re.seitchMouseController(true);
+        }
+    } else {
+        document.documentElement.style.overflow = 'auto';
+        document.body.style.overflow = 'auto';
+
+        for (let i = 0; i < tpanoAutoLoad.length; i++) {
+            tpanoAutoLoad[i].re.seitchMouseController(false);
+        }
+    }
+}
