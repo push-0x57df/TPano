@@ -217,9 +217,7 @@ function TPano(d) {
     }
 
     //体感控制
-    if (d.DeviceOrientationControls == true) {
-        let devicecontrol = new THREE.DeviceOrientationControls(camera);
-    }
+    let devicecontrol = new THREE.DeviceOrientationControls(camera);
 
     //启动鼠标控制
     mouseController();
@@ -282,6 +280,9 @@ function TPano(d) {
         let oldL = 0;
         let x1, x2, y1, y2, l;
         document.addEventListener('touchstart', function (event) {
+            if (!d.MouseController) {
+                return;
+            }
             if (event.touches.length == 2) {
                 mouseFovControllerSport = false;
                 x1 = event.touches[0].clientX;
@@ -294,6 +295,9 @@ function TPano(d) {
             }
         }, false);
         document.addEventListener('touchmove', function (event) {
+            if (!d.MouseController) {
+                return;
+            }
             event.preventDefault(); // prevent scrolling
             event.stopPropagation();
             if (event.touches.length == 2) {

@@ -65,7 +65,14 @@ var tpano = new TPano({
 
 ## 开发进度
 
-第一个版本已发布
+持续更新优化中
+
+v1.0.2
+
+支持插入热点图标
+修复了案例中笔记本屏幕分辨率下的显示问题
+
+https://gitee.com/push_0x57df/TPano/releases/1.02
 
 v1.0.1
 

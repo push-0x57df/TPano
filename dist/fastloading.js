@@ -36,8 +36,9 @@ window.document.body.onmouseover = function (event) {
     }
 }
 
-window.document.body.touchstart = function (event) {
+window.document.body.addEventListener('touchstart', function (event) {
     el = event.target;
+    console.log(el);
     if (el.tagName == "CANVAS") {
         document.documentElement.style.overflow = 'hidden';
         document.body.style.overflow = 'hidden';
@@ -54,4 +55,4 @@ window.document.body.touchstart = function (event) {
             tpanoAutoLoad[i].re.seitchMouseController(false);
         }
     }
-}
+});
