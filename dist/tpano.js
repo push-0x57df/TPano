@@ -217,9 +217,7 @@ function TPano(d) {
     }
 
     //体感控制
-    if (d.DeviceOrientationControls == true) {
-        let devicecontrol = new THREE.DeviceOrientationControls(camera);
-    }
+    let devicecontrol = new THREE.DeviceOrientationControls(camera);
 
     //启动鼠标控制
     mouseController();
