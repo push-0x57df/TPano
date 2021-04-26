@@ -14,48 +14,90 @@
 
 ### 代码案例
 
-``` html
-<!DOCTYPE html>
-<html>
+- 快速自动加载方式
 
-<head>
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TPano 全景照片查看器</title>
-    <style>
-        * {
-            margin: 0;
-        }
+  示例文件位于/example/fastload.html
 
-        #pano {
-            width: 100vw;
-            height: 100vh;
-        }
-    </style>
-</head>
+  详细使用方法请参考开发文档
 
-<body id="pano"></body>
-<!--引入three.js-->
-<script src="./three.js"></script>
-<script src="../dist/tpano.js"></script>
-<script>
-var tpano = new TPano({
-    el:'pano',//照片查看器根节点dom的id
-    photo:[
-        //全景照片数组，每项为一张照片
-        {
-            url:'1.jpg',
-            name:'室内'
-        },
-        {
-            url:'2.jfif',
-            name:'建筑'
-        }
-    ]
-})
-</script>
-</html>
-```
+  ``` html
+  <!DOCTYPE html>
+  <html>
+  
+  <head>
+      <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>TPano 全景照片查看器</title>
+      <style>
+          * {
+              margin: 0;
+          }
+  
+          #tp{
+              width: 200px;
+              height: 140px;
+              display: block;
+          }
+      </style>
+  </head>
+  
+  <body id="pano">
+      <!--直接通过标签tpano引入全景照片1.jpg，无需做其他任何处理，就像在使用img标签一样，
+          但要注意设置标签的css，给出宽度和高度，tpano依照此高度自动生成照片大小-->
+  	<tpano id="tp" src="./1.jpg"></tpano>
+  </body>
+  <!--引入three.js-->
+  <script src="./three.js"></script>
+  <script src="../dist/tpano.js"></script>
+  <script src="../dist/fastloading.js"></script>
+  </html>
+  ```
+
+- 普通集成方式
+
+  ``` html
+  <!DOCTYPE html>
+  <html>
+  
+  <head>
+      <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>TPano 全景照片查看器</title>
+      <style>
+          * {
+              margin: 0;
+          }
+  
+          #pano {
+              width: 100vw;
+              height: 100vh;
+          }
+      </style>
+  </head>
+  
+  <body id="pano"></body>
+  <!--引入three.js-->
+  <script src="./three.js"></script>
+  <script src="../dist/tpano.js"></script>
+  <script>
+  var tpano = new TPano({
+      el:'pano',//照片查看器根节点dom的id
+      photo:[
+          //全景照片数组，每项为一张照片
+          {
+              url:'1.jpg',
+              name:'室内'
+          },
+          {
+              url:'2.jfif',
+              name:'建筑'
+          }
+      ]
+  })
+  </script>
+  </html>
+  ```
+
 
 ### 开发语言
 
@@ -67,10 +109,17 @@ var tpano = new TPano({
 
 持续更新优化中
 
-v1.0.2
+v1.0.3
 
-支持插入热点图标
-修复了案例中笔记本屏幕分辨率下的显示问题
+修复1.0.2版本中发现的影响手机端体感控制的重大缺陷
+
+https://gitee.com/push_0x57df/TPano/releases/1.03
+
+v1.0.2（废弃，发现重大缺陷）
+
+增加快速加载组件
+增强稳定性
+废弃，发现重大缺陷导致手机端体感控制异常
 
 https://gitee.com/push_0x57df/TPano/releases/1.02
 
