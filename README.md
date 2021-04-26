@@ -109,28 +109,20 @@
 
 持续更新优化中
 
-v1.0.3
+v1.04
 
-修复1.0.2版本中发现的影响手机端体感控制的重大缺陷
+解决作因用域引起的模块加载异常
 
-https://gitee.com/push_0x57df/TPano/releases/1.03
+https://gitee.com/push_0x57df/TPano/releases/1.04
 
-v1.0.2（废弃，发现重大缺陷）
-
-增加快速加载组件
-增强稳定性
-废弃，发现重大缺陷导致手机端体感控制异常
-
-https://gitee.com/push_0x57df/TPano/releases/1.02
-
-v1.0.1
+v1.01
 
 支持插入热点图标
 修复了案例中笔记本屏幕分辨率下的显示问题
 
 https://gitee.com/push_0x57df/TPano/releases/1.01
 
-v1.0.0
+v1.00
 
 第一个版本✨
 上线🎉🎉🎉
