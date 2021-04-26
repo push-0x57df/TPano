@@ -217,10 +217,11 @@ function TPano(d) {
     }
 
     //体感控制
+    let devicecontrol
     try {
-        let devicecontrol = new THREE.DeviceOrientationControls(camera);
+        devicecontrol = new THREE.DeviceOrientationControls(camera);
     } catch (error) {
-        let devicecontrol = null;
+        devicecontrol = null;
     }
 
     //启动鼠标控制
