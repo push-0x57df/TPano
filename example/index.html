@@ -181,19 +181,27 @@
     let panoPhoto = [
         //全景照片数组，每项为一张照片
         {
-            url: '1.jpg',
-            name: '室内',
-            fov: {
-                pc: 62,
-                phone: 90
-            }
+            url: 'pano/DSCN0007.JPG',
+            name: '足球场入口',
         },
         {
-            url: '2.jfif',
-            name: '建筑'
+            url: 'pano/DSCN0009.JPG',
+            name: '足球场'
         }, {
-            url: '3.jpg',
-            name: '外景'
+            url: 'pano/DSCN0013.JPG',
+            name: '足球场坡道'
+        }, {
+            url: 'pano/DSCN0016.JPG',
+            name: '湖边'
+        }, {
+            url: 'pano/DSCN0017.JPG',
+            name: '图书馆旁'
+        }, {
+            url: 'pano/DSCN0018.JPG',
+            name: '小公园'
+        }, {
+            url: 'pano/DSCN0019.JPG',
+            name: '篮球场旁'
         }
     ];
     var tpano = new TPano({
@@ -246,29 +254,79 @@
         hotspot: [
             //全景照片上的热点
             {
-                source: '室内',//此热点放置在哪张全景照片上
+                source: '足球场入口',//此热点放置在哪张全景照片上
                 position: {//热点所在的位置
-                    x: 51.22617443281311,
-                    y: -77.47768972497656,
-                    z: -491.24706541614586
-                },
-                imgUrl: './img/outdoor.gif',
-                jumpTo: '建筑'//热点点击后跳往何方
-            },
-            {
-                source: '建筑',
-                position: {
-                    x: -38.877370809465624,
-                    y: -78.21183614810603,
-                    z: -491.8073450832495
+                    x: 496.89276177820193,
+                    y: -45.470141450240746,
+                    z: 15.7856948039098
                 },
                 imgUrl: './img/foot.png',
-                jumpTo: '外景'
+                jumpTo: '足球场'//热点点击后跳往何方
+            },
+            {
+                source: '足球场',
+                position: {
+                    x: -336.2550875236564,
+                    y: -14.322516705554547,
+                    z: -369.0878923870561
+                },
+                imgUrl: './img/foot.png',
+                jumpTo: '足球场坡道'
+            },
+            {
+                source: '足球场坡道',
+                position: {
+                    x: 9.916517848911612,
+                    y: -73.87696480294954,
+                    z: -493.83818114696464
+                },
+                imgUrl: './img/foot.png',
+                jumpTo: '湖边'
+            },
+            {
+                source: '湖边',
+                position: {
+                    x: 54.089284409982234,
+                    y: -25.567089425803836,
+                    z: 495.95622841487307
+                },
+                imgUrl: './img/foot.png',
+                jumpTo: '图书馆旁'
+            },
+            {
+                source: '足球场坡道',
+                position: {
+                    x: -496.45652472791767,
+                    y: -25.137666788574762,
+                    z: -48.767873292494635
+                },
+                imgUrl: './img/foot.png',
+                jumpTo: '图书馆旁'
+            },
+            {
+                source: '图书馆旁',
+                position: {
+                    x: -22.146984058775047,
+                    y: -53.75657318610189,
+                    z: 495.5786184825647
+                },
+                imgUrl: './img/foot.png',
+                jumpTo: '小公园'
+            },
+            {
+                source: '小公园',
+                position: {
+                    x: 470.9682632032511,
+                    y: -66.67077805764235,
+                    z: 153.04203582643925
+                },
+                imgUrl: './img/foot.png',
+                jumpTo: '篮球场旁'
             }
         ],
         DeviceOrientationControls: false,//设备朝向体感控制，默认关闭
         rotateAnimateController: true,//镜头自转
-        debug: false,//调试模式
+        debug: true,//调试模式
     });
 
     //开场加载动画
@@ -346,7 +404,7 @@
                 }, 1000);
             }
             switchPhotoPoint();
-        }else{
+        } else {
             alert('相册还未加载完毕，请稍后再试。');
         }
     }
