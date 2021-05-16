@@ -212,6 +212,7 @@ function TPano(d) {
         for (let i = 0; i < children.length; i++) {
             if (children[i].name == 'hotspot') {
                 scene.children.splice(i, 1);
+                i--;//从一个数组中去掉一个元素会使得后面的元素下标前移1，所以下一个遍历的元素下标也需要减一，避免漏网之鱼
             }
         }
     }
