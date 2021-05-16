@@ -389,14 +389,15 @@ function TPano(d) {
         el.style.touchAction = 'none';
         el.addEventListener('pointerdown', onPointerDown);
         document.addEventListener('wheel', onDocumentMouseWheel);
+        //计算摄像机目前视角状态，保持当前状态，在当前状态上附加变化
+        lon = -1 * THREE.MathUtils.radToDeg(camera.rotation.y) - 90;//经度
+        lat = THREE.MathUtils.radToDeg(camera.rotation.x);//纬度
         function onPointerDown(event) {
             if (!d.MouseController) {
                 return;
             }
-            //计算摄像机目前视角状态，保持当前状态，在当前状态上附加变化
+            
             //console.log(camera);
-            lon = -1 * THREE.MathUtils.radToDeg(camera.rotation.y) - 90;//经度
-            lat = THREE.MathUtils.radToDeg(camera.rotation.x);//纬度
 
             onMouseMove(event);
             if (event.isPrimary === false) return;
@@ -427,7 +428,10 @@ function TPano(d) {
                 rate = 0.1;
             }
             lon = (onPointerDownMouseX - event.clientX) * rate + onPointerDownLon;
+            //console.log('calc0:'+onPointerDownLat);
             lat = (event.clientY - onPointerDownMouseY) * rate + onPointerDownLat;
+            //console.log('calc1:'+lat);
+            
             if (mouseFovControllerSport) {
                 update();
             }
