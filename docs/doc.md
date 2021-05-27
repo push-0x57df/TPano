@@ -84,8 +84,6 @@ var tpano = new TPano({
 
 - 使用快速接入
 
-  
-
   ``` html
   <!DOCTYPE html>
   <html>
@@ -105,12 +103,59 @@ var tpano = new TPano({
   <script src="./dist/fastloading.js"></script>
   </html>
   ```
-
+  
   注意几个问题：
 
   1. 使用这种方式需要引入 /dist/tpano.js 部件
   2. 使用 tpano 标签完成引入，图片链接放在 src 属性，同时一定要给定唯一的 id 属性
   3. 使用这种方式，无法使用 tpano 提供的丰富的函数接口
+
+## 添加全景视频
+
+添加全景视频的方式和全景照片非常类似，仅需要在初始化Tpano时预置 type: 'VIDEO' 即可。其他操作和加入照片无异，仅需要将原本照片url改为视频url，该功能预计在v2.0.0版本中提供
+
+例如：
+
+``` html
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TPano 全景照片查看器</title>
+    <style>
+        * {
+            margin: 0;
+        }
+
+        #pano {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body id="pano"></body>
+<!--引入three.js-->
+<script src="./three.js"></script>
+<script src="../dist/tpano.js"></script>
+<!--设备朝向控制器，不引入无法使用体感控制-->
+<script src="./DeviceOrientationControls.js"></script>
+<script>
+var tpano = new TPano({
+    el:'pano',//照片查看器根节点dom的id
+    photo:[
+        //全景照片数组，每项为一张照片
+        {
+            url:'1.mp4',
+            name:'室内',
+            type: 'VIDEO'
+        }
+    ]
+})
+</script>
+</html>
+```
 
 ## 添加热点
 
