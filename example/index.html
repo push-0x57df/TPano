@@ -102,7 +102,7 @@
             background-color: rgba(20, 20, 20, 0.4);
             border-radius: 5px;
             display: flex;
-            overflow-x: auto;
+            overflow-x: scroll;
             padding: 12px 18px;
             width: 100%;
             position: relative;
@@ -112,6 +112,10 @@
         .photo-box-div {
             margin: 0 4px;
             position: relative;
+        }
+
+        .photo-box-div:nth-last-child(1) {
+            padding-right: 18px;
         }
 
         .photo-box-img {
@@ -202,7 +206,12 @@
         }, {
             url: 'pano/DSCN0019.JPG',
             name: '篮球场旁'
-        }
+        },
+        {
+            url: 'pano/DSCN0035.MP4',
+            type: 'VIDEO',
+            name: '视频'
+        },
     ];
     var tpano = new TPano({
         el: 'pano',//照片查看器根节点dom的id
@@ -322,6 +331,16 @@
                 },
                 imgUrl: './img/foot.png',
                 jumpTo: '篮球场旁'
+            },
+            {
+                source: '篮球场旁',
+                position: {
+                    x: -452.2504972710258,
+                    y: 7.828318511793819,
+                    z: 211.56713992810768
+                },
+                imgUrl: './video.png',
+                jumpTo: '视频'
             }
         ],
         DeviceOrientationControls: false,//设备朝向体感控制，默认关闭
@@ -378,11 +397,17 @@
     function switchPhoto() {
         if (controllerLock && photoBoxLock) {
             switchPhotoStatus = !switchPhotoStatus;
+            let photoBoxHeight;
+            if ($(window).width() < 1000) {
+                photoBoxHeight = '160px';
+            } else {
+                photoBoxHeight = '177px';
+            }
             if (switchPhotoStatus) {
                 $("#photo-box").css('display', 'flex');
                 $("#photo-box").animate({
                     opacity: 1,
-                    height: '160px'
+                    height: photoBoxHeight
                 }, 800);
                 setTimeout(() => {
                     $(".photo-box-p").animate({
@@ -420,7 +445,11 @@
     //创建全景照片相册
     function cratePhoneBox() {
         for (let i = 0; i < panoPhoto.length; i++) {
-            $('#photo-box>div').append('<div onclick="tpano.re.switchPhoto(' + (i + 1) + ')" class="photo-box-div"><img class="photo-box-img" src="' + panoPhoto[i].url + '" alt="第' + (i + 1) + '张照片"><p class="photo-box-p">' + panoPhoto[i].name + '</p></div>');
+            if (panoPhoto[i].type == 'VIDEO') {
+                $('#photo-box>div').append('<div onclick="tpano.re.switchPhoto(' + (i + 1) + ')" class="photo-box-div"><img class="photo-box-img" src="./video.png" alt="第' + (i + 1) + '段视频"><p class="photo-box-p">' + panoPhoto[i].name + '</p></div>');
+            } else {
+                $('#photo-box>div').append('<div onclick="tpano.re.switchPhoto(' + (i + 1) + ')" class="photo-box-div"><img class="photo-box-img" src="' + panoPhoto[i].url + '" alt="第' + (i + 1) + '张照片"><p class="photo-box-p">' + panoPhoto[i].name + '</p></div>');
+            }
         }
     }
 
