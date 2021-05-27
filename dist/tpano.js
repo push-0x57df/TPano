@@ -44,28 +44,41 @@ function TPano(d) {
     loadTextureLoader(loadTextureLoaderCount);
     //用来加载全景照片
     function loadTextureLoader(i) {
-        texture[i] = new THREE.TextureLoader().load(
-            d.photo[i].url,
-            // onLoad回调
-            function () {
+        if (d.photo[i].type == 'VIDEO') {
+            el.insertAdjacentHTML('beforeend','<video id="video-'+i+'" loop muted style="display: none;" crossOrigin="anonymous" playsinline ><source src="'+ d.photo[i].url +'"></video>');
+            let videoId = 'video-'+i;
+            let videoDom = document.getElementById(videoId);
+            videoDom.play();
+            texture[i] = new THREE.VideoTexture( videoDom );
+            //没有找到监听加载的办法，暂时使用延迟模拟回调
+            setTimeout(() => {
                 loadTextureLoaderEnd();
-            },
+            }, 2000);
+        } else {
+            texture[i] = new THREE.TextureLoader().load(
+                d.photo[i].url,
+                // onLoad回调
+                function () {
+                    loadTextureLoaderEnd();
+                },
 
-            // 目前暂不支持onProgress的回调
-            function (e) {
-                console.log(e);
-            },
+                // 目前暂不支持onProgress的回调
+                function (e) {
+                    console.log(e);
+                },
 
-            // onError回调
-            function (err) {
-                console.error('An error happened.');
-            }
-        );
+                // onError回调
+                function (err) {
+                    console.error('An error happened.');
+                }
+            );
+        }
     }
     //用来控制加载下一张全景照片
-    let loadTextureMsg;
+    var loadTextureMsg;
     function loadTextureLoaderEnd() {
         let i = loadTextureLoaderCount;
+        console.log(texture);
         texture[i].panoName = d.photo[i].name;
         loadTextureMsg = {
             'all': d.photo.length,
@@ -328,7 +341,7 @@ function TPano(d) {
 
     //封装鼠标控制
     function mouseController() {
-        
+
         //初始化鼠标控制用变量
         let isUserInteracting = false,
             onPointerDownMouseX = 0, onPointerDownMouseY = 0,
@@ -397,7 +410,7 @@ function TPano(d) {
             if (!d.MouseController) {
                 return;
             }
-            
+
             //console.log(camera);
 
             onMouseMove(event);
@@ -432,7 +445,7 @@ function TPano(d) {
             //console.log('calc0:'+onPointerDownLat);
             lat = (event.clientY - onPointerDownMouseY) * rate + onPointerDownLat;
             //console.log('calc1:'+lat);
-            
+
             if (mouseFovControllerSport) {
                 update();
             }
