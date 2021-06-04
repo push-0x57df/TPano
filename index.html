@@ -48,13 +48,16 @@
                 <div class="introduce">
                     <div class="introduce-img-group">
                         <div class="introduce-img">
-                            <img src="./example/2.jfif" alt="球面展开全景图">
+                            <img src="../example/pano/DSCN0019.JPG" alt="球面展开全景图">
                             <p>相机输出的球面展开全景图</p>
                         </div>
                         <div class="introduce-img">
-                            <tpano id="pano-1" src="./example/2.jfif" alt="球面展开全景图"></tpano>
+                            <tpano id="pano-1" src="../example/pano/DSCN0019.JPG" alt="球面展开全景图"></tpano>
                             <p>使用 TPano 加载的全景场景</p>
                         </div>
+                    </div>
+                    <div>
+                        <p class="features-describe">&emsp;&emsp;通过市面上常见的3D相机和智能手机APP我们可以得到包含全方向视角像素点的全景照片或视频，TPano将展开的全景图片和视屏映射到虚拟的球体表面，在球心放置透视相机，通过透视相机输出画面，结合一些基于经纬、欧拉角的转换控制算法实现视角自由控制。</p>
                     </div>
                 </div>
             </div>
@@ -95,7 +98,7 @@
                     </div>
                 </div>
 
-                <p class="features-describe">基于众多的特征支持下，开发人员不必在意全景照片显示器内部需要使用何种技术实现 3D
+                <p class="features-describe">&emsp;&emsp;基于众多的特征支持下，开发人员不必在意全景照片显示器内部需要使用何种技术实现 3D
                     渲染和模型控制，就可以很轻松的将全景照片功能集成到自己的项目中，在全景照片技术逐渐广泛应用的当下，我们也觉得需要有一种方式可以很快速的实现在 WEB
                     网页上显示全景照片，本项目就是基于这样的目的立项开发，并将保持开源免费。</p>
 
@@ -120,7 +123,9 @@
                         <p>使用标快速接入可以实现零配置低代码接入，全自动加载，就像使用 img 标签一样简单</p>
                     </div>
                 </div>
-
+                <div>
+                    <p class="features-describe">&emsp;&emsp;开发人员可以根据项目需求任选一种接入方式进行接入，使用零配置低代码的接入方式控制功能可能会受到限制，如您想要获得最全面的功能体验，请使用标准接入。</p>
+                </div>
             </div>
         </div>
 
@@ -183,8 +188,8 @@
         photo: [
             //全景照片数组，每项为一张照片
             {
-                url: './example/1.jpg',
-                name: '室内'
+                url: '../example/1.jpg',
+                name: '树林'
             }
         ],
         rotateAnimateController: true,//镜头自转
