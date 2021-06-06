@@ -123,5 +123,7 @@ https://gitee.com/push_0x57df/TPano/releases
 您可以直接点击这里：https://gitee.com/push_0x57df/TPano/blob/develop/docs/doc.md
 
 ## Demo
-
+GitPage：
 https://push_0x57df.gitee.io/tpano/example
+备用：
+http://116.63.181.142:8001/example
