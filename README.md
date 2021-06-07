@@ -125,6 +125,3 @@ https://gitee.com/push_0x57df/TPano/releases
 ## Demo
 GitPage：
 https://push_0x57df.gitee.io/tpano/example
-
-备用（没有使用Https，根据浏览器策略将无法使用陀螺仪控制，在QQ内置浏览器使用不受影响）：
-http://116.63.181.142:8001/example
