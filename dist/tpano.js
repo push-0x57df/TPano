@@ -441,12 +441,13 @@ function TPano(d) {
                 //判断为电脑
                 rate = 0.1;
             }
-            lon = (onPointerDownMouseX - event.clientX) * rate + onPointerDownLon;
-            //console.log('calc0:'+onPointerDownLat);
-            lat = (event.clientY - onPointerDownMouseY) * rate + onPointerDownLat;
-            //console.log('calc1:'+lat);
 
+            //缩放视角时 暂停相机旋转
             if (mouseFovControllerSport) {
+                lon = (onPointerDownMouseX - event.clientX) * rate + onPointerDownLon;
+                //console.log('calc0:'+onPointerDownLat);
+                lat = (event.clientY - onPointerDownMouseY) * rate + onPointerDownLat;
+                //console.log('calc1:'+lat);
                 update();
             }
         }
