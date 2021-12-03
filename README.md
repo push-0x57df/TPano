@@ -125,3 +125,9 @@ https://gitee.com/push_0x57df/TPano/releases
 ## Demo
 GitPage：
 https://push_0x57df.gitee.io/tpano/example
+
+## 赞助
+
+顺手而为的免费赞助给一个呗~
+
+![QQ图片20211203113755](README.assets/QQ图片20211203113755.png)
