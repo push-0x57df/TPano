@@ -132,7 +132,3 @@ https://push_0x57df.gitee.io/tpano/example
 目前我手头没有拍摄制作全景影像的设备，需要大家提供相应的帮助。
 贡献方式：Pull Requests，目录：devData
 注意：请保证您对贡献的全景影像拥有版权！
-
-顺手而为的免费赞助给一个呗~
-
-![QQ图片20211203113755](README.assets/QQ图片20211203113755.png)
